@@ -1,6 +1,12 @@
 name: Sync pnpm lockfile
 
 on:
+  push:
+    branches:
+      - "feat/**"
+    paths:
+      - package.json
+      - pnpm-workspace.yaml
   workflow_dispatch:
 
 permissions:
@@ -20,6 +26,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
@@ -31,7 +38,6 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-          cache: pnpm
 
       - name: Generate lockfile
         run: pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
@@ -40,6 +46,8 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Commit and push lockfile when changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ -z "$(git status --porcelain -- pnpm-lock.yaml)" ]; then
             echo "Lockfile is already synchronized and passes frozen validation."
@@ -50,4 +58,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- pnpm-lock.yaml
           git commit -m "chore: sync pnpm lockfile"
+          gh auth setup-git
           git push
