@@ -30,10 +30,10 @@ Não implemente validação criptográfica de JWT manualmente.
 
 A aplicação deve validar, no mínimo, conforme OIDC Core e utilizando uma biblioteca mantida:
 
-- Assinatura usando uma chave pública publicada pelo JWKS indicado nos metadados.
-- `iss` igual ao issuer descoberto.
-- `aud` contendo o Client ID da aplicação.
-- `exp` e demais verificações temporais.
+- A assinatura, usando as chaves públicas publicadas no JWKS indicado pelos metadados.
+- `iss`, que deve corresponder exatamente ao issuer descoberto.
+- `aud`, que deve conter o Client ID da aplicação.
+- `exp` e as demais verificações temporais.
 - `nonce`, quando enviado na solicitação.
 - `azp`, quando aplicável.
 
