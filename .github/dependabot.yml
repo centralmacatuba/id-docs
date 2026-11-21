@@ -10,6 +10,8 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
+    labels:
+      - dependencies
     commit-message:
       prefix: chore
       include: scope
@@ -32,6 +34,9 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
     assignees:
       - centralmacatuba
       - desenvolvedor-ee
