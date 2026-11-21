@@ -23,7 +23,8 @@ async function runChecker(markdown, files = {}, symlinks = {}) {
       const link = join(docs, path);
       await mkdir(join(link, ".."), { recursive: true });
       await symlink(target, link);
-    }\n    return spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
+    }
+    return spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
   } finally {
     await rm(root, { recursive: true, force: true });
   }
