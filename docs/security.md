@@ -36,7 +36,11 @@ Registre apenas callbacks controlados pela aplicação. O CM ID exige HTTPS e re
 
 ## Reportar um problema
 
-Não publique detalhes exploráveis de uma vulnerabilidade em issues públicas. Utilize um canal privado de contato mantido pelo projeto e inclua apenas as informações necessárias para reproduzir e corrigir o problema.
+Não publique detalhes exploráveis de uma vulnerabilidade do serviço de identidade em issues, pull requests ou discussões públicas.
+
+Se ainda não conhece um canal privado de reporte, abra uma issue pública com o título **Solicitação de canal privado para reporte de segurança**. Informe somente que precisa de um meio seguro de contato. Não inclua descrição da falha, componente afetado, passos de reprodução, prova de conceito, logs ou dados técnicos. Aguarde os mantenedores fornecerem um canal privado e compartilhe os detalhes somente por esse canal.
+
+A política [`SECURITY.md`](https://github.com/centralmacatuba/id-docs/blob/principal/SECURITY.md) descreve o procedimento de reporte privado para vulnerabilidades deste repositório de documentação. Ela não substitui o canal privado do serviço CM ID.
 
 ## Privacidade
 

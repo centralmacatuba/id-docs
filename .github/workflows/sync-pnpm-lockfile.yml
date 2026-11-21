@@ -66,9 +66,8 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       # GITHUB_TOKEN pushes do not start follow-up push or pull_request workflows.
-      # Dispatch the branch validation explicitly after the lockfile commit.
+      # Dispatch on every successful run so a failed dispatch can be retried manually.
       - name: Dispatch validation for the synchronized lockfile
-        if: steps.commit.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

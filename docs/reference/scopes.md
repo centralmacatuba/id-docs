@@ -13,6 +13,12 @@ Scopes representam o acesso solicitado pela aplicação. O CM ID aplica consenti
 
 O scope `openid` é obrigatório. O portal aceita de um a quatro scopes distintos por solicitação.
 
+## Scopes anunciados e capacidades específicas
+
+Os metadados de descoberta podem anunciar scopes adicionais relacionados a capacidades específicas do serviço. Isso não significa que esses scopes estejam disponíveis no formulário convencional, que possam ser solicitados por qualquer cliente ou que a concessão seja automática.
+
+Use somente scopes que tenham sido explicitamente aprovados para o Client ID e concedidos no fluxo de autorização. Em caso de diferença entre esta tabela e os metadados, considere os metadados como a descrição dinâmica do servidor e confirme a elegibilidade do cliente com a equipe responsável pelo serviço.
+
 ## Princípio do menor privilégio
 
 - Solicite apenas os scopes necessários à funcionalidade.

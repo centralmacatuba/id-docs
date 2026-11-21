@@ -41,11 +41,21 @@ A lista de chaves públicas pode mudar. Bibliotecas OIDC devem atualizar o JWKS 
 
 ## Claims e consentimento
 
-Os scopes `profile` e `email` solicitam acesso às claims correspondentes, além do scope obrigatório `openid`. Solicite somente os dados necessários e explique ao usuário por que a aplicação precisa deles.
+Consulte `claims_supported` no documento de descoberta para conhecer as claims anunciadas pelo issuer. Os scopes `profile` e `email` solicitam acesso às claims correspondentes, além do scope obrigatório `openid`; a presença de uma claim na lista de metadados não garante que ela será preenchida em todos os tokens ou para todos os usuários.
+
+- Trate claims opcionais como ausentes quando não forem emitidas.
+- Não presuma que `profile` ou `email` garantam todos os atributos possíveis.
+- Solicite somente os dados necessários e explique ao usuário por que a aplicação precisa deles.
+- Utilize os valores validados pela biblioteca OIDC; não confie em claims obtidas apenas pela decodificação do JWT.
+- Reavalie a disponibilidade das claims quando os metadados do issuer mudarem.
 
 ## Logout
 
-Consulte o documento de descoberta para identificar os recursos de encerramento de sessão publicados. Não presuma que todos os provedores implementam os mesmos parâmetros ou mecanismos de logout.
+Consulte o documento de descoberta para identificar se `end_session_endpoint` está publicado. O suporte a logout iniciado pelo RP, seus parâmetros e os Redirect URIs de pós-logout dependem das capacidades anunciadas e da configuração aprovada para o cliente.
+
+Quando disponível, utilize uma biblioteca OIDC para construir a solicitação de logout. Não presuma que `id_token_hint`, `post_logout_redirect_uri` ou outros parâmetros sejam aceitos sem confirmação nos metadados e nas instruções do serviço.
+
+Encerrar a sessão local da aplicação não encerra necessariamente a sessão do provedor de identidade; da mesma forma, o logout no provedor não substitui a invalidação da sessão local e a limpeza segura dos tokens.
 
 ## Referências
 

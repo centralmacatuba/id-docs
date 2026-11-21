@@ -18,7 +18,7 @@ O Redirect URI enviado deve corresponder exatamente a um endereço registrado. N
 
 ## Exemplo JavaScript com openid-client
 
-O exemplo abaixo ilustra um cliente público registrado com o método de autenticação `none`. A persistência da transação deve ser implementada no armazenamento de sessão do seu framework; as funções `saveTransactionToSession` e `consumeTransactionFromSession` representam essa camada da aplicação.
+O exemplo abaixo ilustra um cliente público registrado com o método de autenticação `none`. A persistência da transação deve ser implementada no armazenamento de sessão do seu framework; as funções `saveTransactionToSession` e `consumeTransactionFromSession(state)` representam essa camada da aplicação. A segunda função deve remover atomicamente apenas a transação associada ao `state` recebido; isso permite várias tentativas simultâneas e impede que um callback desconhecido consuma outra transação.
 
 Instale a biblioteca:
 
@@ -89,7 +89,18 @@ if (
 callbackUrl.search = incomingCallbackUrl.search;
 
 // Valide o callback antes de consumir a transação da sessão.
-const transaction = await consumeTransactionFromSession();
+// O state identifica a tentativa exata, inclusive quando há logins simultâneos na mesma sessão.
+const callbackStates = callbackUrl.searchParams.getAll("state");
+if (callbackStates.length !== 1 || !callbackStates[0]) {
+  throw new Error("Callback deve conter exatamente um parâmetro state.");
+}
+
+// A implementação da sessão deve remover atomicamente somente a transação desse state.
+// Um state desconhecido nunca pode consumir outra tentativa pendente.
+const transaction = await consumeTransactionFromSession(callbackStates[0]);
+if (!transaction || transaction.state !== callbackStates[0]) {
+  throw new Error("Transação OAuth não encontrada para o state recebido.");
+}
 
 const tokens = await oidc.authorizationCodeGrant(
   config,

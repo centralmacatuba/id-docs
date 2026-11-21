@@ -40,7 +40,7 @@ const state = oidc.randomState();
 const nonce = oidc.randomNonce();
 
 // Implemente estas funções com o armazenamento de sessão do seu framework.
-// Os valores devem ser vinculados à sessão e consumidos uma única vez.
+// Os valores devem ser vinculados à sessão e consumidos uma única vez. Armazene as tentativas por `state`; `consumeTransactionFromSession(state)` deve remover atomicamente somente a tentativa solicitada.
 await saveTransactionToSession({ codeVerifier, state, nonce, redirectUri });
 
 const authorizationUrl = oidc.buildAuthorizationUrl(config, {
@@ -77,7 +77,18 @@ if (
 callbackUrl.search = incomingCallbackUrl.search;
 
 // Só consuma a transação após validar o endereço do callback.
-const transaction = await consumeTransactionFromSession();
+// O state identifica a tentativa exata, inclusive quando há logins simultâneos na mesma sessão.
+const callbackStates = callbackUrl.searchParams.getAll("state");
+if (callbackStates.length !== 1 || !callbackStates[0]) {
+  throw new Error("Callback deve conter exatamente um parâmetro state.");
+}
+
+// A implementação da sessão deve remover atomicamente somente a transação desse state.
+// Um state desconhecido nunca pode consumir outra tentativa pendente.
+const transaction = await consumeTransactionFromSession(callbackStates[0]);
+if (!transaction || transaction.state !== callbackStates[0]) {
+  throw new Error("Transação OAuth não encontrada para o state recebido.");
+}
 
 const tokens = await oidc.authorizationCodeGrant(
   config,
