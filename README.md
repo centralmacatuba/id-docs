@@ -54,7 +54,7 @@ docs/
 └── changelog.md
 ```
 
-## Publicação pelo GitHub Pages
+## Integração contínua e dependências
 
 O workflow `.github/workflows/deploy-pages.yml`:
 1. Instala Node.js 22 e pnpm 12.12.1.
@@ -62,7 +62,17 @@ O workflow `.github/workflows/deploy-pages.yml`:
 3. Compila o site com VitePress.
 4. Publica o artefato no GitHub Pages somente quando a branch `principal` recebe alterações.
 
-Branches `feat/**` e pull requests executam a etapa de build para validar o conteúdo, mas não publicam o site.
+Branches `feat/**` e pull requests para `principal` executam a etapa de build para validar o conteúdo, mas não publicam o site. Esse build também funciona como CI do projeto; não há necessidade de um segundo workflow `ci.yml` que repita a mesma instalação e compilação.
+
+O workflow `.github/workflows/sync-pnpm-lockfile.yml` é manual:
+- Execute-o pela aba **Actions → Sync pnpm lockfile → Run workflow**, selecionando uma branch de trabalho.
+- Ele usa pnpm 12.12.1 e Node.js 22, gera ou atualiza somente `pnpm-lock.yaml`, valida o modo frozen e faz commit apenas quando o arquivo muda.
+- A branch `principal` é deliberadamente excluída para evitar commits diretos nela.
+- Depois que o lockfile for gerado e versionado, altere a instalação do workflow de Pages para `pnpm install --frozen-lockfile`.
+
+O Dependabot está configurado em `.github/dependabot.yml` para verificar semanalmente as dependências pnpm e as GitHub Actions, abrindo PRs de atualização com os rótulos correspondentes.
+
+## Publicação pelo GitHub Pages
 
 ### Configuração necessária no GitHub
 
@@ -100,4 +110,4 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 
 ## Estado do scaffold
 
-Esta branch inicializa a documentação, a configuração VitePress e o workflow de publicação. Antes de integrar à branch principal, gere e versione `pnpm-lock.yaml` com pnpm 12.12.1, execute build local e valide a publicação de teste no GitHub Pages. O workflow está configurado para instalar sem lockfile enquanto o primeiro lockfile ainda não foi gerado; depois de versioná-lo, altere a instalação para `pnpm install --frozen-lockfile`.
+Esta branch inicializa a documentação, a configuração VitePress, o workflow de validação/publicação, a sincronização manual do lockfile e as atualizações automatizadas de dependências. Antes de integrar à branch principal, gere e versione `pnpm-lock.yaml), altere o workflow de Pages para instalação frozen e valide a publicação de teste no GitHub Pages.
