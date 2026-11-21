@@ -76,7 +76,7 @@ if (
 }
 callbackUrl.search = incomingCallbackUrl.search;
 
-// Só consuma a transação depois de validar o endereço do callback.
+// Só consuma a transação após validar o endereço do callback.
 const transaction = await consumeTransactionFromSession();
 
 const tokens = await oidc.authorizationCodeGrant(
