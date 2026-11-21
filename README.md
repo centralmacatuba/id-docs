@@ -86,9 +86,9 @@ O workflow `.github/workflows/zizmor.yml` audita os workflows e configurações 
 
 O workflow `.github/workflows/languagetool.yml` revisa a ortografia e a gramática do conteúdo em português nos pull requests, usando LanguageTool e reviewdog.
 
-O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação frozen; não use `--no-frozen-lockfile` na CI. O Vite está fixado em 6.4.6 por meio de override em `pnpm-workspace.yaml`, versão corrigida para o alerta GHSA-p4f5-76q4-ffq7 identificado na dependência transitiva do VitePress 1.x.
+O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação frozen; não use `--no-frozen-lockfile` na CI. O Vite está fixado em 6.4.6 por meio de override em `pnpm-workspace.yaml`, versão corrigida para o alerta GHSA-p4f5-76q4-ffq7 identificado na dependência transitiva do VitePress 1.x. Vue também é declarado diretamente para disponibilizar o runtime usado pelos módulos de página gerados durante a renderização do VitePress.
 
-As atualizações semanais das dependências pnpm e das GitHub Actions são acompanhadas pelo Dependabot, configurado em `.github/dependabot.yml`.
+As atualizações semanais das dependências pnpm e das GitHub Actions são acompanhadas pelo Dependabot, configurado em `.github/dependabot.yml` com período mínimo de sete dias para atualizações.
 
 ## Publicação pelo GitHub Pages
 
