@@ -8,9 +8,9 @@ Sempre que possível, utilize um backend intermediário (BFF):
 
 1. O navegador inicia o login no backend da aplicação.
 2. O backend inicia Authorization Code com PKCE e armazena a transação em sessão.
-3. O backend processa o callback e valida a resposta OIDC.
-4. O navegador recebe apenas um cookie de sessão protegido.
-5. Chamadas da SPA aos recursos da aplicação são mediadas pelo backend.
+3. O servidor processa o callback e valida a resposta OIDC.
+4. Ao final, o navegador recebe apenas um cookie de sessão protegido.
+5. As chamadas da SPA aos recursos da aplicação são mediadas pelo backend.
 
 Essa arquitetura reduz a exposição de tokens ao JavaScript executado no navegador.
 
