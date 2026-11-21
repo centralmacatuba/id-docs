@@ -37,7 +37,7 @@ async function walk(directory) {
       try {
         href = decodeURIComponent(href.split("#")[0].split("?")[0]);
       } catch {
-        failures.push(relative(process.cwd(), path) + ": URL local contém escape percentual inválido: " + match[1]);
+        failures.push(relative(process.cwd(), path) + ": URL local contém escape percentual inválido: " + link.href);
         continue;
       }
       if (!href) continue;
@@ -48,7 +48,7 @@ async function walk(directory) {
         : resolve(dirname(path), href);
 
       if (!isWithin(docsRoot, target)) {
-        failures.push(relative(process.cwd(), path) + ": destino local fora de docs/: " + match[1]);
+        failures.push(relative(process.cwd(), path) + ": destino local fora de docs/: " + link.href);
         continue;
       }
 
@@ -87,7 +87,7 @@ async function walk(directory) {
         const reason = escapedSymlink
           ? "destino local aponta para fora de docs/: "
           : "link local não encontrado: ";
-        failures.push(relative(process.cwd(), path) + ": " + reason + match[1]);
+        failures.push(relative(process.cwd(), path) + ": " + reason + link.href);
       }
     }
   }

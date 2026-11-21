@@ -69,12 +69,13 @@ test("reconhece cercas CommonMark com tis e comprimentos maiores", async (t) => 
       ticks.repeat(4) + "javascript title",
       "const backtickExample = true;",
       ticks.repeat(4),
-    ].join("\\n"),
+    ].join("\n"),
   });
 
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /válida em 2 bloco\\(s\\)/);
+  assert.match(result.stdout, /válida em 2 bloco\(s\)/);
 });
+
 test("lista erros de sintaxe em vários arquivos com o número do bloco", async (t) => {
   const result = await runChecker(t, {
     "a.md": [block("js", "const valid = true;"), block("mjs", "export const = ;")].join("\n\n"),

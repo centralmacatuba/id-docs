@@ -23,7 +23,7 @@ async function walk(directory) {
 
     const source = await readFile(path, "utf8");
     const blocks = extractFencedCodeBlocks(source).filter((block) => {
-      const language = /^([^\\s{]+)/.exec(block.info)?.[1]?.toLowerCase();
+      const language = /^([^\s{]+)/.exec(block.info)?.[1]?.toLowerCase();
       return ["js", "javascript", "mjs"].includes(language);
     });
     for (let index = 0; index < blocks.length; index += 1) {
