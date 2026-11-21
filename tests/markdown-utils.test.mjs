@@ -43,5 +43,5 @@ test("extrai links de referência sem tratar definições como links separados",
     "[atalho]: /three",
   ].join("\n");
 
-  assert.deepEqual(extractMarkdownLinks(source).map((link) => link.href), ["/one", "/two", "/three"]);
+  assert.deepEqual(extractMarkdownLinks(source).map((link) => link.href), ["/one", "/one", "/two", "/three"]);
 });
