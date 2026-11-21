@@ -7,7 +7,8 @@
 - Checklist de preparação para produção e política de versionamento documental.
 - Política de segurança com instruções para reporte privado de vulnerabilidades.
 - Verificação automatizada de sintaxe de exemplos JavaScript e testes de PKCE S256.
-- Verificador de links locais com testes para destinos existentes, ausentes e trechos de código.
+- Verificador de links locais com testes para destinos existentes, ausentes, trechos de código e equivalência entre URLs `.html` e páginas Markdown.
+- Cobertura automatizada para validação de exemplos, metadados OIDC/OAuth, callbacks OAuth e URLs canônicas do VitePress.
 - URLs canônicas específicas por página e histórico Git completo para datas de atualização do VitePress.
 - Auditoria de segurança dos workflows com zizmor e revisão de português brasileiro com LanguageTool.
 - Sincronização automática do lockfile em alterações de dependências nas branches de trabalho.
