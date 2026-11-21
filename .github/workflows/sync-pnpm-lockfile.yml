@@ -1,12 +1,6 @@
 name: Sync pnpm lockfile
 
 on:
-  push:
-    branches:
-      - "feat/**"
-    paths:
-      - "package.json"
-      - "pnpm-workspace.yaml"
   workflow_dispatch:
 
 permissions:
