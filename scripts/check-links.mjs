@@ -43,6 +43,9 @@ async function walk(directory) {
       const candidates = [];
       if (extname(target)) {
         candidates.push(target);
+        if (/\.html$/i.test(target)) {
+          candidates.push(target.replace(/\.html$/i, ".md"));
+        }
         if (href.startsWith("/")) candidates.push(resolve(docsRoot, "public", "." + href));
       } else {
         candidates.push(target + ".md", join(target, "index.md"), join(target, "index.html"));
