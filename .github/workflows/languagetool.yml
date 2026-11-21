@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  checks: write
+  pull-requests: write
 
 concurrency:
   group: languagetool-${{ github.workflow }}-${{ github.ref }}
@@ -28,7 +28,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           language: pt-BR
-          reporter: github-pr-check
+          reporter: github-pr-review
           level: info
           patterns: "README.md CONTRIBUTING.md SECURITY.md docs/**/*.md"
           disabled_rules: "DOUBLE_PUNCTUATION,DOUBLE_PUNCTUATION_XML,PORTUGUESE_WORD_REPEAT_BEGINNING_RULE,FRAGMENT_TWO_PREPOSITIONS,PT_BARBARISMS_REPLACE_MANAGER,PT_BARBARISMS_REPLACE_SERVER,PT_BARBARISMS_REPLACE_STATUS,PT_BARBARISMS_REPLACE_SCRIPTS,PT_BARBARISMS_REPLACE_APP,UNLIKELY_OPENING_PUNCTUATION,ABREVIATIONS_PUNCTUATION,UPPERCASE_SENTENCE_START,UPPERCASE_AFTER_COMMA,URL_VALIDATION,PT_COMPOUNDS_PRE_REFORM_NÃO_AUTORIZADO"
