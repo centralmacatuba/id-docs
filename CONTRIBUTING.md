@@ -32,7 +32,7 @@ O workflow de CI também verifica links locais das páginas Markdown. A checagem
 - Explique claramente quando uma função é pseudocódigo ou uma abstração que o integrador precisa implementar.
 - Atualize o histórico e os guias relacionados quando uma mudança alterar o comportamento documentado.
 
-## Pull requests
+## Solicitações de alteração
 
 - Use uma descrição clara do problema e da mudança.
 - Informe os arquivos e protocolos afetados.
@@ -42,7 +42,7 @@ O workflow de CI também verifica links locais das páginas Markdown. A checagem
 
 ## Revisão automatizada
 
-Os pull requests passam por verificações automatizadas:
+As solicitações de alteração passam por verificações automatizadas:
 
 - VitePress build, testes, exemplos JavaScript e links locais.
 - zizmor para auditoria de segurança dos workflows e da configuração do GitHub Actions.
