@@ -14,7 +14,7 @@ Para aplicações que atuam em nome de uma pessoa, utilize **Authorization Code 
 6. Troque o código no endpoint de token com o mesmo `redirect_uri` e `code_verifier`.
 7. Valide o ID Token por meio de uma biblioteca OIDC confiável.
 
-O Redirect URI enviado deve corresponder exatamente a um endereço registrado. Não reutilize `state`, `nonce` ou `code_verifier` entre tentativas.
+O Redirect URI enviado deve corresponder exatamente a um endereço registrado. Não reutilize `state`, `nonce` ou `code_verifier` entre tentativas. Para os exemplos com `openid-client` v6, registre um Redirect URI sem query string: a biblioteca remove os parâmetros de consulta da URL de callback ao derivar o `redirect_uri` enviado na troca do código.
 
 ## Exemplo JavaScript com openid-client
 
@@ -41,6 +41,9 @@ const config = await oidc.discovery(
   undefined,
   oidc.None(),
 );
+
+// Verificação adicional de assinatura dos JWTs processados via JWKS.
+oidc.enableNonRepudiationChecks(config);
 
 const codeVerifier = oidc.randomPKCECodeVerifier();
 const codeChallenge = await oidc.calculatePKCECodeChallenge(codeVerifier);
@@ -70,11 +73,27 @@ const authorizationUrl = oidc.buildAuthorizationUrl(config, {
 No callback registrado:
 
 ```js
+// A origem e o caminho vêm do Redirect URI registrado, nunca do Host.
+const callbackUrl = new URL(redirectUri);
+if (callbackUrl.search) {
+  throw new Error("Registre o Redirect URI sem query string.");
+}
+
+const incomingCallbackUrl = new URL(request.url, callbackUrl.origin);
+if (
+  incomingCallbackUrl.origin !== callbackUrl.origin ||
+  incomingCallbackUrl.pathname !== callbackUrl.pathname
+) {
+  throw new Error("Callback recebido em um endereço inesperado.");
+}
+callbackUrl.search = incomingCallbackUrl.search;
+
+// Valide o callback antes de consumir a transação da sessão.
 const transaction = await consumeTransactionFromSession();
 
 const tokens = await oidc.authorizationCodeGrant(
   config,
-  new URL(request.url),
+  callbackUrl,
   {
     pkceCodeVerifier: transaction.codeVerifier,
     expectedState: transaction.state,
@@ -87,7 +106,9 @@ const claims = tokens.claims();
 // Use as claims validadas pela biblioteca conforme a política da aplicação.
 ```
 
-O exemplo pressupõe que os scopes solicitados foram aprovados para o cliente. O backend deve proteger a sessão, consumir a transação uma única vez e nunca registrar códigos, tokens ou valores de PKCE em logs. Para clientes `private_key_jwt`, configure a biblioteca com esse método e mantenha a chave privada exclusivamente no backend; não reutilize a configuração `None()`.
+O exemplo pressupõe que os scopes solicitados foram aprovados para o cliente. O backend deve proteger a sessão, consumir a transação uma única vez e nunca registrar códigos, tokens ou valores de PKCE. Para clientes `private_key_jwt`, configure a biblioteca com esse método e mantenha a chave privada exclusivamente no backend; não reutilize a configuração `None()`.
+
+A opção `enableNonRepudiationChecks` habilita uma verificação criptográfica adicional das assinaturas dos JWTs processados, utilizando o JWKS publicado pelo issuer. A biblioteca também autentica a comunicação direta com o endpoint de token por TLS; portanto, essa opção deve ser entendida como uma camada extra de não repúdio, não como substituta da validação de issuer, audience, expiração, nonce e demais verificações OIDC.
 
 A API de `openid-client` pode evoluir. Consulte a documentação da versão instalada antes de atualizar a integração: [documentação oficial do openid-client](https://github.com/panva/openid-client).
 
@@ -111,10 +132,9 @@ Solicite `offline_access` somente quando a aplicação realmente precisar manter
 
 ## O que não fazer
 
-- Não utilize implicit grant.
-- Não utilize Resource Owner Password Credentials.
-- Não reutilize Client IDs entre aplicações diferentes.
-- Não aceite Redirect URIs não registrados.
-- Não solicite scopes apenas por conveniência.
+- Evite implicit grant e Resource Owner Password Credentials.
+- Mantenha Client IDs exclusivos para cada aplicação.
+- Aceite somente Redirect URIs registrados.
+- Solicite apenas os scopes necessários.
 - Não trate um access token como prova de identidade do usuário; para identidade, valide o ID Token OIDC.
-- Não armazene tokens em localStorage quando puder mantê-los no backend em uma sessão protegida.
+- Evite armazenar tokens em `localStorage` quando puder mantê-los no backend em uma sessão protegida.
