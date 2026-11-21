@@ -15,14 +15,25 @@ async function walk(directory) {
     }
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
 
-    const source = (await readFile(path, "utf8")).replace(/```[\\s\\S]*?```/g, "");
-    const links = [...source.matchAll(/!?\\[[^\\]]*\\]\\((<[^>]+>|[^)\\s]+)(?:\\s+["'][^"']*["'])?\\)/g)];
+    const fence = String.fromCharCode(96).repeat(3);
+    const source = (await readFile(path, "utf8")).replace(new RegExp(fence + "[\\s\\S]*?" + fence, "g"), "");
+    const links = [...source.matchAll(/!?\[[^\]]*\]\((<[^>]+>|[^)\s]+)(?:\s+["'][^"']*["'])?\)/g)];
 
     for (const match of links) {
       let href = match[1].replace(/^<|>$/g, "");
-      if (!href || href.startsWith("#") || /^(?:https?:|mailto:|tel:|data:|javascript:)/i.test(href)) continue;
+      if (
+        !href ||
+        href.startsWith("#") ||
+        href.startsWith("//") ||
+        /^(?:https?:|mailto:|tel:|data:|javascript:)/i.test(href)
+      ) continue;
 
-      href = decodeURIComponent(href.split("#")[0].split("?")[0]);
+      try {
+        href = decodeURIComponent(href.split("#")[0].split("?")[0]);
+      } catch {
+        failures.push(relative(process.cwd(), path) + ": URL local contém escape percentual inválido: " + match[1]);
+        continue;
+      }
       if (!href) continue;
       checked += 1;
 
@@ -46,7 +57,7 @@ async function walk(directory) {
             break;
           }
         } catch {
-          // Try the next VitePress clean-URL candidate.
+          // Tenta o próximo destino compatível com clean URLs do VitePress.
         }
       }
 
@@ -61,7 +72,7 @@ await walk(docsRoot);
 
 if (failures.length) {
   for (const failure of failures) process.stderr.write(failure + "\n");
-  process.stderr.write("\n" + failures.length + " link(s) local(is) quebrado(s).\n");
+  process.stderr.write("\n" + failures.length + " problema(s) em links locais.\n");
   process.exitCode = 1;
 } else {
   process.stdout.write("Links locais verificados: " + checked + ". Nenhum destino ausente.\n");
