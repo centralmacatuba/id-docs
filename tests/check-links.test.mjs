@@ -113,7 +113,7 @@ test("rejeita destinos relativos e absolutos que escapam de docs/", async () => 
 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /destino local fora de docs\/: \.\.\/README\.md/);
-  assert.match(result.stderr, /destino local fora de docs\/: \/\\.\\.\/README\.md/);
+  assert.match(result.stderr, /destino local fora de docs\/: \/\.\.\/README\.md/);
   assert.match(result.stderr, /2 problema\(s\)/);
 });
 
