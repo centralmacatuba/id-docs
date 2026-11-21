@@ -12,6 +12,7 @@ const common = {
   authorization_endpoint: `${issuer}/authorize`,
   token_endpoint: `${issuer}/token`,
   response_types_supported: ["code"],
+  code_challenge_methods_supported: ["plain", "S256"],
 };
 const discovery = {
   ...common,
