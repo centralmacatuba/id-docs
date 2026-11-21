@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - principal
-  workflow_dispatch:
 
 permissions:
   contents: read
