@@ -92,3 +92,12 @@ test("distingue escapes inválidos de destinos ausentes e continua a verificaç�
   assert.match(result.stderr, /guide\.md: link local não encontrado: \/folder\.svg/);
   assert.match(result.stderr, /3 problema\(s\)/);
 });
+
+test("aceita destino .html quando a página Markdown correspondente existe", async () => {
+  const result = await runChecker("[página HTML](/guide.html)\n", {
+    "guide.md": "# Guia\n",
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Links locais verificados: 1\./);
+});
