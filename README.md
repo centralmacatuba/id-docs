@@ -81,18 +81,12 @@ No repositório, abra **Settings → Pages** e selecione **GitHub Actions** como
 
 ### DNS do domínio personalizado
 
-O arquivo `docs/public/CNAME` publica o domínio personalizado no artefato:
-
-```text
-docs.id.centralmacatuba.qzz.io
-```
-
-No DNS, crie um registro CNAME:
+Como o site usa um workflow personalizado do GitHub Actions, o arquivo `CNAME` não configura o domínio e é ignorado pelo Pages. Configure primeiro o domínio personalizado em **Settings → Pages → Custom domain** e salve `docs.id.centralmacatuba.qzz.io`. Só depois configure o DNS. Para esse subdomínio, crie um registro CNAME:
 
 - Nome: `docs.id`
 - Destino: `centralmacatuba.github.io`
 
-Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a configuração e validação inicial do domínio personalizado. Depois, confira o status HTTPS no GitHub Pages.
+Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a configuração e validação inicial. Verifique o domínio personalizado no GitHub antes de criar o CNAME para reduzir o risco de takeover. Depois, aguarde a validação e habilite **Enforce HTTPS** nas configurações do Pages.
 
 ## Princípios editoriais
 
@@ -104,7 +98,6 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 
 ## Fontes
 
-- Repositório privado de implementação: mantido separadamente; não é referenciado em exemplos públicos.
 - Issuer padrão documentado: https://id.centralmacatuba.qzz.io
 - Descoberta OIDC: https://id.centralmacatuba.qzz.io/.well-known/openid-configuration
 - Metadados OAuth: https://id.centralmacatuba.qzz.io/.well-known/oauth-authorization-server
