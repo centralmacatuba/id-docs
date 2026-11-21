@@ -9,7 +9,7 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   transformHead({ page }) {
-    const route = page.relativePath
+    const route = page
       .replace(/(^|\/)index\.md$/, "$1")
       .replace(/\.md$/, "");
     const canonicalPath = route ? `/${route}` : "/";
