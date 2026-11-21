@@ -1,10 +1,11 @@
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
-const docsDirectory = new URL("../docs/", import.meta.url).pathname;
-const repositoryRoot = new URL("../", import.meta.url).pathname;
+const docsDirectory = fileURLToPath(new URL("../docs/", import.meta.url));
+const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const temporaryDirectory = await mkdtemp(join(tmpdir(), "cm-id-doc-examples-"));
 const failures = [];
 let checked = 0;
@@ -20,7 +21,9 @@ async function walk(directory) {
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
 
     const source = await readFile(path, "utf8");
-    const blocks = [...source.matchAll(new RegExp("```(?:js|javascript|mjs)\\s*\\n([\\s\\S]*?)\\n```", "g"))];
+    const fence = String.fromCharCode(96).repeat(3);
+    const pattern = new RegExp(fence + "(?:js|javascript|mjs)\\s*\\n([\\s\\S]*?)\\n" + fence, "g");
+    const blocks = [...source.matchAll(pattern)];
     for (let index = 0; index < blocks.length; index += 1) {
       const snippet = blocks[index][1];
       if (!snippet.trim()) continue;
