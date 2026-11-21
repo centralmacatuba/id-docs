@@ -36,7 +36,7 @@ Este checklist ajuda a revisar uma integração antes de disponibilizá-la a usu
 - [ ] O usuário recebe explicação clara sobre dados e permissões solicitados.
 - [ ] A aplicação solicita somente scopes necessários.
 - [ ] Termos e Política de Privacidade aplicáveis foram aceitos pelo titular quando exigido pelo serviço.
-- [ ] Claims opcionais são tratadas como ausentes quando não fornecidas.
+- [ ] Trate claims opcionais como ausentes quando o serviço não as fornecer.
 - [ ] A aplicação define retenção, exclusão e atendimento a solicitações dos titulares.
 
 ## 5. Operação e resiliência
