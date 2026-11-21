@@ -118,9 +118,12 @@ test("rejeita links simbólicos que apontam para fora de docs/", async () => {
     const docs = join(root, "docs");
     await mkdir(docs, { recursive: true });
     await writeFile(join(docs, "index.md"), "[fora](outside.md)\n", "utf8");
-    const outside = join(root, "outside.md");
-    await writeFile(outside, "# Fora de docs\n", "utf8");
-    await symlink(outside, join(docs, "outside.md"));
+    const outside = join(root, "outside");
+    await mkdir(outside, { recursive: true });
+    await writeFile(join(outside, "secret.md"), "# Fora de docs\n", "utf8");
+    // Directory junctions work on Windows without the symlink privilege.
+    await symlink(outside, join(docs, "outside"), "junction");
+    await writeFile(join(docs, "index.md"), "[fora](outside/secret.md)\n", "utf8");
     const result = spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
 
     assert.equal(result.status, 1);
