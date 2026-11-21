@@ -1,10 +1,16 @@
 name: Sync pnpm lockfile
 
 on:
-  # Manual execution only. Automatic triggers are intentionally disabled.
+  push:
+    branches:
+      - "feat/**"
+    paths:
+      - package.json
+      - pnpm-workspace.yaml
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -13,46 +19,58 @@ concurrency:
 
 jobs:
   sync:
-    # Keep the default branch protected from direct workflow commits.
     if: github.ref != 'refs/heads/principal'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@0609f0983b7a228f052f81ef4c3d6510cae254ad # v4.1.0
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
           version: 12.12.1
           run_install: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeba8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
 
-      # Resolve the dependency graph without running package lifecycle scripts.
       - name: Generate lockfile
         run: pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
 
-      # Validate with the exact frozen mode used by CI before committing.
       - name: Validate frozen lockfile
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      # Commit only the lockfile; never include generated or unrelated files.
-      - name: Commit and push lockfile when changed or missing from Git
+      - name: Commit and push lockfile when changed
+        id: commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ -z "$(git status --porcelain -- pnpm-lock.yaml)" ]; then
             echo "Lockfile is already synchronized and passes frozen validation."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add -- pnpm-lock.yaml
           git commit -m "chore: sync pnpm lockfile"
+          gh auth setup-git
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # GITHUB_TOKEN pushes do not start follow-up push or pull_request workflows.
+      # Dispatch on every successful run so a failed dispatch can be retried manually.
+      - name: Dispatch validation for the synchronized lockfile
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run deploy-pages.yml --ref "$GITHUB_REF_NAME"
+          gh workflow run check-links.yml --ref "$GITHUB_REF_NAME"
+          gh workflow run zizmor.yml --ref "$GITHUB_REF_NAME"
