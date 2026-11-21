@@ -70,7 +70,7 @@ O workflow `.github/workflows/deploy-pages.yml`:
 4. Compila o site com VitePress.
 5. Publica o artefato no GitHub Pages somente quando a branch `principal` recebe alterações.
 
-Solicitações de alteração direcionadas a `principal` executam as etapas de validação e build, mas não publicam o site. A execução manual também permite validar a documentação sem publicar.
+Solicitações de alteração direcionadas a `principal` executam as etapas de validação e build, mas não publicam o site. A execução manual na branch `principal` também publica; para validar sem publicar, execute o workflow manualmente em outra branch.
 
 O workflow `.github/workflows/check-links.yml` verifica links locais das páginas Markdown, incluindo os caminhos sem extensão usados pelo VitePress. A checagem é local e não depende da disponibilidade de sites externos.
 
