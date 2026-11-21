@@ -1,0 +1,53 @@
+name: Sync repository labels
+
+on:
+  push:
+    branches:
+      - principal
+    paths:
+      - .github/dependabot.yml
+      - .github/workflows/sync-labels.yml
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: sync-repository-labels
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or update Dependabot labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ensure_label() {
+            local name="$1"
+            local color="$2"
+            local description="$3"
+            local endpoint="repos/${GH_REPO}/labels/${name}"
+
+            if gh api "$endpoint" >/dev/null 2>&1; then
+              gh api --method PATCH "$endpoint" \
+                -f new_name="$name" \
+                -f color="$color" \
+                -f description="$description" >/dev/null
+              echo "Updated label: $name"
+            else
+              gh api --method POST "repos/${GH_REPO}/labels" \
+                -f name="$name" \
+                -f color="$color" \
+                -f description="$description" >/dev/null
+              echo "Created label: $name"
+            fi
+          }
+
+          ensure_label "dependencies" "0366d6" "Atualizações de dependências do projeto."
+          ensure_label "github-actions" "2088ff" "Atualizações de GitHub Actions e workflows."
