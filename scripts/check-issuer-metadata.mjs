@@ -3,12 +3,12 @@ const resources = [
   {
     name: "OpenID Connect Discovery",
     path: "/.well-known/openid-configuration",
-    required: ["issuer", "authorization_endpoint", "token_endpoint", "jwks_uri", "response_types_supported", "code_challenge_methods_supported"],
+    required: ["issuer", "authorization_endpoint", "token_endpoint", "jwks_uri"],
   },
   {
     name: "OAuth Authorization Server Metadata",
     path: "/.well-known/oauth-authorization-server",
-    required: ["issuer", "authorization_endpoint", "token_endpoint", "response_types_supported", "code_challenge_methods_supported"],
+    required: ["issuer", "authorization_endpoint", "token_endpoint"],
   },
 ];
 
