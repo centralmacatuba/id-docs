@@ -7,7 +7,7 @@
 - Checklist de preparação para produção e política de versionamento documental.
 - Política de segurança com instruções para reporte privado de vulnerabilidades.
 - Verificação automatizada de sintaxe de exemplos JavaScript e testes de PKCE S256.
-- Verificador de links locais com parser compartilhado de cercas CommonMark, links inline e links de referência, além de testes para destinos existentes, ausentes e equivalência entre URLs `.html` e páginas Markdown.
+- Verificador de links locais com parser compartilhado de cercas CommonMark, links inline e links de referência completos, colapsados, abreviados e com espaços, além de testes para destinos existentes, ausentes e equivalência entre URLs `.html` e páginas Markdown.
 - Exemplos OAuth atualizados para associar e consumir cada transação pelo `state`, rejeitando valores ausentes, duplicados ou incompatíveis sem trocar o código.
 - Referência OIDC ampliada para descoberta de claims e logout condicionado às capacidades publicadas pelo issuer.
 - Orientação de segurança com procedimento seguro para solicitar um canal privado de reporte sem divulgar detalhes em público.
