@@ -4,14 +4,16 @@ Documentação para desenvolvedores e integradores do **Central Macatuba - ID (C
 
 > A Central Macatuba é um projeto independente e gratuito, sem vínculo com a Prefeitura Municipal de Macatuba.
 
-## Site
+## Site publicado
 
-- Domínio planejado: https://docs.id.centralmacatuba.qzz.io/
-- Publicação: GitHub Pages
-- Gerador: VitePress
-- Idioma inicial: português brasileiro
+- **Documentação:** https://docs.id.centralmacatuba.qzz.io/
+- **Hospedagem:** GitHub Pages
+- **Gerador:** VitePress
+- **Idioma:** português brasileiro
 
-A ativação depende da configuração do GitHub Pages no repositório e do registro DNS correspondente.
+O site está publicado no domínio personalizado. Alterações enviadas à branch `principal` são validadas e, quando aprovadas, publicadas pelo workflow do GitHub Actions.
+
+> **Importante:** a publicação deste site não significa que o serviço CM ID esteja homologado ou liberado para uso em produção. Consulte a [página de estado do serviço](https://docs.id.centralmacatuba.qzz.io/status) e os metadados públicos do issuer antes de integrar.
 
 ## Desenvolvimento local
 
@@ -26,7 +28,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Gere a versão estática:
+Gere e visualize a versão estática:
 
 ```sh
 pnpm check:examples
@@ -68,7 +70,7 @@ O workflow `.github/workflows/deploy-pages.yml`:
 2. Instala dependências com `pnpm install --frozen-lockfile`.
 3. Verifica a sintaxe dos exemplos JavaScript, os links locais e executa testes automatizados.
 4. Compila o site com VitePress.
-5. Publica o artefato no GitHub Pages somente quando a branch `principal` recebe alterações.
+5. Publica o artefato no GitHub Pages a partir da branch `principal`.
 
 Solicitações de alteração direcionadas a `principal` executam as etapas de validação e build, mas não publicam o site. A execução manual na branch `principal` também publica; para validar sem publicar, execute o workflow manualmente em outra branch.
 
@@ -90,20 +92,9 @@ O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação froze
 
 As atualizações semanais das dependências pnpm e das GitHub Actions são acompanhadas pelo Dependabot, configurado em `.github/dependabot.yml` com período mínimo de sete dias para atualizações.
 
-## Publicação pelo GitHub Pages
+## Domínio e publicação
 
-### Configuração necessária no GitHub
-
-No repositório, abra **Settings → Pages** e selecione **GitHub Actions** como Build and deployment. O workflow precisa das permissões Pages e OIDC definidas no próprio job de deploy.
-
-### DNS do domínio personalizado
-
-Como o site usa um workflow personalizado do GitHub Actions, o arquivo `CNAME` não configura o domínio e é ignorado pelo Pages. Configure primeiro o domínio personalizado em **Settings → Pages → Custom domain** e salve `docs.id.centralmacatuba.qzz.io`. Só depois configure o DNS. Para esse subdomínio, crie um registro CNAME:
-
-- Nome: `docs.id`
-- Destino: `centralmacatuba.github.io`
-
-Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a configuração e validação inicial. Verifique o domínio personalizado no GitHub antes de criar o CNAME para reduzir o risco de takeover. Depois, aguarde a validação e habilite **Enforce HTTPS** nas configurações do Pages.
+O domínio personalizado `docs.id.centralmacatuba.qzz.io` já está configurado no GitHub Pages e é o endereço público oficial desta documentação. O workflow de deploy utiliza GitHub Actions; o arquivo `CNAME` não é o mecanismo de configuração do domínio nesse fluxo.
 
 ## Princípios editoriais
 
@@ -121,4 +112,6 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 
 ## Estado do projeto
 
-O repositório contém a documentação, a configuração VitePress, os workflows, os testes e os scripts de validação na branch de trabalho. A compilação é validada em pull requests direcionados a `principal` e em execuções manuais; pushes em `principal` também geram o artefato de publicação. A publicação efetiva ocorre somente a partir dessa branch, após configurar GitHub Pages e o domínio personalizado. Uma compilação aprovada não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.
+Este repositório contém a documentação pública, a configuração VitePress, os workflows, os testes e os scripts de validação. O site de documentação está publicado no GitHub Pages em [docs.id.centralmacatuba.qzz.io](https://docs.id.centralmacatuba.qzz.io/), com atualizações publicadas a partir da branch `principal` após a validação da CI.
+
+A publicação da documentação e a aprovação da compilação não comprovam, isoladamente, a disponibilidade, a segurança operacional ou a homologação do serviço de identidade para produção. Consulte a página de estado e os metadados de descoberta antes de realizar integrações.
