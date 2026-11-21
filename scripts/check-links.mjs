@@ -22,8 +22,8 @@ async function walk(directory) {
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
 
     const fence = String.fromCharCode(96).repeat(3);
-    const source = (await readFile(path, "utf8")).replace(new RegExp(fence + "[\\\\s\\\\S]*?" + fence, "g"), "");
-    const links = [...source.matchAll(/!?\\[[^\\]]*\\]\\((<[^>]+>|[^)\\s]+)(?:\\s+["'][^"']*["'])?\\)/g)];
+    const source = (await readFile(path, "utf8")).replace(new RegExp(fence + "[\\s\\S]*?" + fence, "g"), "");
+    const links = [...source.matchAll(/!?\[[^\]]*\]\((<[^>]+>|[^)\s]+)(?:\s+["'][^"']*["'])?\)/g)];
 
     for (const match of links) {
       let href = match[1].replace(/^<|>$/g, "");
@@ -55,8 +55,8 @@ async function walk(directory) {
       const candidates = [];
       if (extname(target)) {
         candidates.push(target);
-        if (/\\.html$/i.test(target)) {
-          candidates.push(target.replace(/\\.html$/i, ".md"));
+        if (/\.html$/i.test(target)) {
+          candidates.push(target.replace(/\.html$/i, ".md"));
         }
         if (href.startsWith("/")) candidates.push(resolve(docsRoot, "public", "." + href));
       } else {
@@ -96,9 +96,9 @@ async function walk(directory) {
 await walk(docsRoot);
 
 if (failures.length) {
-  for (const failure of failures) process.stderr.write(failure + "\\n");
-  process.stderr.write("\\n" + failures.length + " problema(s) em links locais.\\n");
+  for (const failure of failures) process.stderr.write(failure + "\n");
+  process.stderr.write("\n" + failures.length + " problema(s) em links locais.\n");
   process.exitCode = 1;
 } else {
-  process.stdout.write("Links locais verificados: " + checked + ". Nenhum destino ausente.\\n");
+  process.stdout.write("Links locais verificados: " + checked + ". Nenhum destino ausente.\n");
 }
