@@ -1,6 +1,6 @@
 # Descoberta e endpoints
 
-O CM ID publica metadados padronizados na raiz do issuer. A descoberta é a fonte de verdade para os endpoints e capacidades disponíveis.
+O CM ID publica metadados padronizados na raiz do issuer. A descoberta é a fonte de verdade para os endpoints e as capacidades disponíveis.
 
 ## Issuer padrão
 
@@ -10,7 +10,7 @@ https://id.centralmacatuba.qzz.io
 
 ## OpenID Connect Discovery
 
-```text
+```http
 GET /.well-known/openid-configuration
 ```
 
@@ -20,9 +20,9 @@ URL completa:
 https://id.centralmacatuba.qzz.io/.well-known/openid-configuration
 ```
 
-## OAuth Authorization Server Metadata
+## Metadados do servidor de autorização OAuth
 
-```text
+```http
 GET /.well-known/oauth-authorization-server
 ```
 
@@ -67,8 +67,8 @@ O endpoint administrativo de consulta de chaves não é uma API pública de inte
 
 ## Regras
 
-- Não acrescente `/api/auth` ao issuer.
-- Não fixe endpoints que podem mudar.
+- Utilize o issuer sem acrescentar `/api/auth`.
+- Obtenha os endpoints dos metadados, sem fixar endereços que podem mudar.
 - Valide se o issuer retornado corresponde exatamente ao issuer esperado.
 - Utilize HTTPS.
 - Trate falhas de descoberta como falhas de configuração, sem fallback silencioso para endpoints inventados.
