@@ -60,7 +60,7 @@ export function extractMarkdownLinks(source) {
     links.push({ href: match[1].replace(/^<|>$/g, ""), index: match.index });
   }
 
-  const referencePattern = /!?\[([^\]]+)\](?:\[([^\]]*)\])?/g;
+  const referencePattern = /!?\[([^\]]+)\](?:[ \t]*\[([^\]]*)\])?/g;
   for (const match of content.matchAll(referencePattern)) {
     if (/^\s*\(/.test(content.slice(match.index + match[0].length))) continue;
     const label = normalizeReferenceLabel(match[2] === undefined || match[2] === "" ? match[1] : match[2]);

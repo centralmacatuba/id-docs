@@ -34,6 +34,7 @@ test("reconhece fences com tis e ignora links dentro do bloco", () => {
 test("extrai links de referência sem tratar definições como links separados", () => {
   const source = [
     "[texto][ref]",
+    "[com espaço] [ref]",
     "[colapsado][]",
     "[atalho]",
     "",
