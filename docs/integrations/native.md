@@ -6,11 +6,12 @@ Aplicativos móveis e desktop distribuídos aos usuários são clientes público
 
 1. Registre o cliente como `native` ou `desktop`, com método `none`.
 2. Utilize Authorization Code com PKCE S256.
-3. Abra a página de autorização no navegador externo do sistema, não em uma WebView incorporada.
-4. Gere `state`, `nonce` e `code_verifier` novos para cada tentativa.
-5. Receba o callback somente em um Redirect URI HTTPS previamente registrado.
-6. Troque o código com o `code_verifier` original.
-7. Valide o ID Token por meio de uma biblioteca OIDC apropriada à plataforma.
+3. Gere `state`, `nonce` e `code_verifier` novos para cada tentativa e derive o `code_challenge` S256 correspondente.
+4. Armazene esses valores de forma segura, vinculados à tentativa de autenticação, para validá-los no retorno.
+5. Abra a página de autorização no navegador externo do sistema, não em uma WebView incorporada, enviando o `code_challenge`, `state` e `nonce`.
+6. Receba o callback somente em um Redirect URI HTTPS previamente registrado.
+7. Troque o código com o `code_verifier` original.
+8. Valide o ID Token por meio de uma biblioteca OIDC apropriada à plataforma.
 
 ## Redirect URI HTTPS
 
