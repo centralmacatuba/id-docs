@@ -17,7 +17,8 @@
     "check:issuer": "node scripts/check-issuer-metadata.mjs"
   },
   "devDependencies": {
-    "vitepress": "1.6.4"
+    "vitepress": "1.6.4",
+    "vue": "3.5.46"
   },
   "description": "Public developer documentation for Central Macatuba - ID."
 }
