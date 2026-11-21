@@ -38,7 +38,7 @@ O workflow de CI também verifica links locais das páginas Markdown. A checagem
 - Informe os arquivos e protocolos afetados.
 - Inclua evidências de validação local.
 - Destaque mudanças incompatíveis e passos de migração.
-- Não inclua alterações de lockfile sem sincronização reproduzível por pnpm.
+- Altere `pnpm-lock.yaml` somente quando puder reproduzir a sincronização com pnpm.
 
 ## Revisão automatizada
 
