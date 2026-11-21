@@ -57,7 +57,7 @@ Este checklist ajuda a revisar uma integração antes de disponibilizá-la a usu
 - [ ] `nonce` incorreto rejeitado.
 - [ ] Código expirado ou reutilizado rejeitado.
 - [ ] Redirect URI divergente rejeitado.
-- [ ] Falha de descoberta e indisponibilidade tratadas.
+- [ ] Trate falhas de descoberta e períodos de indisponibilidade.
 - [ ] Revogação e encerramento de sessão testados conforme as capacidades disponíveis.
 
 ## Liberação
