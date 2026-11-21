@@ -19,7 +19,11 @@ async function runChecker(markdown, files = {}, symlinks = {}) {
       await mkdir(join(target, ".."), { recursive: true });
       await writeFile(target, content, "utf8");
     }
-    for (const [path, target] of Object.entries(symlinks)) {\n      const link = join(docs, path);\n      await mkdir(join(link, ".."), { recursive: true });\n      await symlink(target, link);\n    }\n    return spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
+    for (const [path, target] of Object.entries(symlinks)) {
+      const link = join(docs, path);
+      await mkdir(join(link, ".."), { recursive: true });
+      await symlink(target, link);
+    }\n    return spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
   } finally {
     await rm(root, { recursive: true, force: true });
   }
