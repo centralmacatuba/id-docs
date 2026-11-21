@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,7 +8,7 @@ import test from "node:test";
 
 const checker = fileURLToPath(new URL("../scripts/check-links.mjs", import.meta.url));
 
-async function runChecker(markdown, files = {}) {
+async function runChecker(markdown, files = {}, symlinks = {}) {
   const root = await mkdtemp(join(tmpdir(), "cm-id-link-check-"));
   try {
     const docs = join(root, "docs");
@@ -19,7 +19,7 @@ async function runChecker(markdown, files = {}) {
       await mkdir(join(target, ".."), { recursive: true });
       await writeFile(target, content, "utf8");
     }
-    return spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
+    for (const [path, target] of Object.entries(symlinks)) {\n      const link = join(docs, path);\n      await mkdir(join(link, ".."), { recursive: true });\n      await symlink(target, link);\n    }\n    return spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -100,4 +100,32 @@ test("aceita destino .html quando a página Markdown correspondente existe", asy
 
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Links locais verificados: 1\./);
+});
+
+
+test("rejeita destinos relativos e absolutos que escapam de docs/", async () => {
+  const result = await runChecker("[relativo](../README.md)\n[absoluto](/../README.md)\n");
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /destino local fora de docs\/: \.\.\/README\.md/);
+  assert.match(result.stderr, /destino local fora de docs\/: \/\\.\\.\/README\.md/);
+  assert.match(result.stderr, /2 problema\(s\)/);
+});
+
+test("rejeita links simbólicos que apontam para fora de docs/", async () => {
+  const root = await mkdtemp(join(tmpdir(), "cm-id-link-check-symlink-"));
+  try {
+    const docs = join(root, "docs");
+    await mkdir(docs, { recursive: true });
+    await writeFile(join(docs, "index.md"), "[fora](outside.md)\n", "utf8");
+    const outside = join(root, "outside.md");
+    await writeFile(outside, "# Fora de docs\n", "utf8");
+    await symlink(outside, join(docs, "outside.md"));
+    const result = spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /destino local aponta para fora de docs\/: outside\.md/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
