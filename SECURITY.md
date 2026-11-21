@@ -15,10 +15,13 @@ Use GitHub's private vulnerability reporting for this repository:
 2. Select **Security** → **Advisories**.
 3. Choose **Report a vulnerability** and submit the report privately.
 
-If the private reporting option is unavailable, do not publish technical
-details. Contact the repository maintainers through an existing private
-communication channel associated with the project and ask for a secure
-reporting route.
+If private vulnerability reporting is unavailable, open a public issue titled
+**Request for a private security-reporting channel**. Do not include the
+vulnerability description, affected component, reproduction steps, proof of
+concept, logs, or any other technical details. Ask the maintainers to provide
+a secure private route and share the report only after that route has been
+established. The public issue is solely a way to request contact; it is not a
+place to report the vulnerability itself.
 
 ## What to include
 
