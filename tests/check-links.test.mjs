@@ -8,7 +8,7 @@ import test from "node:test";
 
 const checker = fileURLToPath(new URL("../scripts/check-links.mjs", import.meta.url));
 
-async function runChecker(markdown, files = {}, symlinks = {}) {
+async function runChecker(markdown, files = {}) {
   const root = await mkdtemp(join(tmpdir(), "cm-id-link-check-"));
   try {
     const docs = join(root, "docs");
@@ -18,11 +18,6 @@ async function runChecker(markdown, files = {}, symlinks = {}) {
       const target = join(docs, path);
       await mkdir(join(target, ".."), { recursive: true });
       await writeFile(target, content, "utf8");
-    }
-    for (const [path, target] of Object.entries(symlinks)) {
-      const link = join(docs, path);
-      await mkdir(join(link, ".."), { recursive: true });
-      await symlink(target, link);
     }
     return spawnSync(process.execPath, [checker], { cwd: root, encoding: "utf8" });
   } finally {
