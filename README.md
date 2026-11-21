@@ -11,7 +11,7 @@ Documentação para desenvolvedores e integradores do **Central Macatuba - ID (C
 - Gerador: VitePress
 - Idioma inicial: português brasileiro
 
-O domínio será ativado depois de configurar GitHub Pages no repositório e o registro DNS correspondente.
+A ativação depende da configuração do GitHub Pages no repositório e do registro DNS correspondente.
 
 ## Desenvolvimento local
 
@@ -66,11 +66,11 @@ CONTRIBUTING.md
 O workflow `.github/workflows/deploy-pages.yml`:
 1. Instala Node.js 22 e pnpm 12.12.1.
 2. Instala dependências com `pnpm install --frozen-lockfile`.
-3. Verifica a sintaxe dos exemplos JavaScript e executa testes automatizados de PKCE.
+3. Verifica a sintaxe dos exemplos JavaScript, os links locais e executa testes automatizados.
 4. Compila o site com VitePress.
 5. Publica o artefato no GitHub Pages somente quando a branch `principal` recebe alterações.
 
-Branches `feat/**` e pull requests para `principal` executam as etapas de validação e build, mas não publicam o site.
+Pull requests direcionados a `principal` executam as etapas de validação e build, mas não publicam o site. A execução manual também permite validar a documentação sem publicar.
 
 O workflow `.github/workflows/check-links.yml` verifica links locais das páginas Markdown, incluindo os caminhos sem extensão usados pelo VitePress. A checagem é local e não depende da disponibilidade de sites externos.
 
@@ -82,9 +82,13 @@ O workflow `.github/workflows/sync-pnpm-lockfile.yml`:
 - Usa pnpm 12.12.1 e Node.js 22, gera ou atualiza somente `pnpm-lock.yaml`, valida o modo frozen e faz commit apenas quando o arquivo muda.
 - A branch `principal` é deliberadamente excluída para evitar commits diretos nela.
 
-O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação frozen; não use `--no-frozen-lockfile` na CI. O Vite é fixado em 6.4.6 por meio de override em `pnpm-workspace.yaml`, versão corrigida para o alerta GHSA-p4f5-76q4-ffq7 identificado na dependência transitiva do VitePress 1.x.
+O workflow `.github/workflows/zizmor.yml` audita os workflows e configurações do GitHub Actions com zizmor em pull requests e alterações na branch `principal`.
 
-O Dependabot está configurado em `.github/dependabot.yml` para verificar semanalmente as dependências pnpm e as GitHub Actions.
+O workflow `.github/workflows/languagetool.yml` revisa a ortografia e a gramática do conteúdo em português nos pull requests, usando LanguageTool e reviewdog.
+
+O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação frozen; não use `--no-frozen-lockfile` na CI. O Vite está fixado em 6.4.6 por meio de override em `pnpm-workspace.yaml`, versão corrigida para o alerta GHSA-p4f5-76q4-ffq7 identificado na dependência transitiva do VitePress 1.x.
+
+As atualizações semanais das dependências pnpm e das GitHub Actions são acompanhadas pelo Dependabot, configurado em `.github/dependabot.yml`.
 
 ## Publicação pelo GitHub Pages
 
@@ -117,4 +121,4 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 
 ## Estado do projeto
 
-A documentação, a configuração VitePress, os workflows de validação/publicação, revisão periódica de metadados, verificação de links, testes e sincronização do lockfile estão versionados na branch de trabalho. O build é validado em branches de trabalho e pull requests; a publicação efetiva ocorre somente a partir da branch `principal`, após configurar GitHub Pages e o domínio personalizado. A existência de um build aprovado não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.
+A documentação, a configuração VitePress, os workflows de validação/publicação, a revisão periódica de metadados, a verificação de links, os testes e a sincronização do lockfile estão versionados na branch de trabalho. A compilação é validada em pull requests direcionados a `principal` e em execuções manuais; pushes em `principal` também geram o artefato de publicação. A publicação efetiva ocorre somente a partir dessa branch, após configurar GitHub Pages e o domínio personalizado. Um build aprovado não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.
