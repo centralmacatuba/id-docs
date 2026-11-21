@@ -42,13 +42,14 @@ O ambiente identifica onde a aplicação será utilizada: `development`, `stagin
 
 As URLs de website, logo, privacidade, termos, redirect e post-logout devem obedecer às validações do portal:
 
-- Utilize HTTPS.
-- Não utilize curingas (`*`).
-- Não inclua usuário, senha ou fragmento.
-- Não informe portas explícitas.
-- Não utilize endereços IP, `localhost`, subdomínios `.localhost`, domínios `.local` ou `.internal`.
+- Utilize HTTPS em todas as URLs.
+- Informe endereços sem curingas (`*`), credenciais embutidas ou fragmentos.
+- Omita portas explícitas.
+- Endereços IP, `localhost`, subdomínios `.localhost` e domínios `.local` ou `.internal` não são aceitos.
 - Cada lista de redirect e post-logout aceita até 10 URLs distintas.
 - Redirect URIs devem corresponder exatamente aos valores enviados pelo cliente durante a autorização.
+
+Para integrações com `openid-client` v6, prefira registrar Redirect URIs sem query string. A biblioteca remove os parâmetros da URL de callback ao derivar o `redirect_uri` usado na troca do código, e não consegue distinguir parâmetros fixos do endereço dos parâmetros da resposta OAuth.
 
 Não use uma URL genérica para cobrir vários ambientes. Registre cada callback necessário de forma explícita.
 
@@ -111,7 +112,7 @@ O titular pode cancelar solicitações ainda não provisionadas enquanto estiver
 
 - Mantenha os Redirect URIs mínimos e específicos.
 - Separe callbacks de desenvolvimento, staging e produção.
-- Proteja a chave privada de `private_key_jwt` em um cofre seguro.
+- Armazene a chave privada de `private_key_jwt` em um cofre de segredos.
 - Publique apenas chaves públicas no JWKS.
 - Solicite somente os scopes necessários.
 - Mantenha contatos técnicos e URLs de privacidade atualizados.
