@@ -23,7 +23,7 @@ Este checklist ajuda a revisar uma integração antes de disponibilizá-la a usu
 
 ## 3. Segredos, tokens e sessão
 
-- [ ] Chaves privadas de `private_key_jwt` ficam em secret manager ou armazenamento equivalente.
+- [ ] Chaves privadas de `private_key_jwt` ficam em um gerenciador de segredos ou armazenamento equivalente.
 - [ ] JWKS publicado contém somente chaves públicas.
 - [ ] Tokens não são gravados em logs, URLs, analytics ou ferramentas de erro.
 - [ ] Tokens são mantidos no backend sempre que a arquitetura permitir.
@@ -62,4 +62,4 @@ Este checklist ajuda a revisar uma integração antes de disponibilizá-la a usu
 
 ## Liberação
 
-Não promova a integração apenas porque o build passou. Confirme o ambiente, a aprovação do cliente, a disponibilidade do issuer, os requisitos jurídicos e a validação operacional antes de habilitar usuários reais.
+A aprovação do build, por si só, não autoriza a liberação. Confirme o ambiente, a aprovação do cliente, a disponibilidade do issuer, os requisitos jurídicos e a validação operacional antes de habilitar usuários reais.
