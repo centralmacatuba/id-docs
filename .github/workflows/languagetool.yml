@@ -1,0 +1,35 @@
+name: Review Portuguese documentation
+
+on:
+  pull_request:
+    branches:
+      - principal
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+
+concurrency:
+  group: languagetool-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  languagetool:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Check Portuguese text
+        uses: reviewdog/action-languagetool@afd06e9b0f782c9562c92efffb66a49c09b2b4f4 # v1.23.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          language: pt-BR
+          reporter: github-pr-check
+          level: info
+          patterns: "README.md CONTRIBUTING.md SECURITY.md docs/**/*.md"
+          disabled_rules: "DOUBLE_PUNCTUATION,DOUBLE_PUNCTUATION_XML,PORTUGUESE_WORD_REPEAT_BEGINNING_RULE,FRAGMENT_TWO_PREPOSITIONS,PT_BARBARISMS_REPLACE_MANAGER,PT_BARBARISMS_REPLACE_SERVER,UNLIKELY_OPENING_PUNCTUATION,PT_COMPOUNDS_PRE_REFORM_NÃO_AUTORIZADO"
