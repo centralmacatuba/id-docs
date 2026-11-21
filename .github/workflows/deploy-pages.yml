@@ -22,6 +22,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
@@ -40,6 +43,9 @@ jobs:
 
       - name: Check JavaScript examples
         run: pnpm check:examples
+
+      - name: Check local documentation links
+        run: pnpm check:links
 
       - name: Run tests
         run: pnpm test
