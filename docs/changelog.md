@@ -2,12 +2,14 @@
 
 ## Não lançado
 
-- Alinhamento dos requisitos do portal de aplicações com as validações efetivas do serviço.
-- Detalhamento dos estados de revisão, provisionamento, cancelamento e revogação.
-- Exemplo de Authorization Code com PKCE S256 usando `openid-client`.
-- Esclarecimento sobre aceite dos documentos legais e claims OIDC.
-- CI com instalação frozen a partir do lockfile versionado.
-- Correção das instruções de domínio personalizado para publicação por workflow do GitHub Actions.
+- Guia de diagnóstico para erros OAuth e OIDC.
+- Guias de integração para Node.js/backend, SPA e aplicativos nativos/desktop.
+- Checklist de preparação para produção e política de versionamento documental.
+- Guia de contribuição.
+- Verificação automatizada de sintaxe de exemplos JavaScript e testes de PKCE S256.
+- Verificação offline de links internos no CI.
+- Revisão mensal dos metadados públicos do issuer.
+- Atualização do Vite transitivo para a versão corrigida 6.4.6.
 
 ## 0.1.0 — início da documentação pública
 

@@ -22,13 +22,15 @@ Requisitos:
 Instale as dependências e inicie o servidor:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
 Gere a versão estática:
 
 ```sh
+pnpm check:examples
+pnpm test
 pnpm build
 pnpm preview
 ```
@@ -42,8 +44,10 @@ docs/
 ├── .vitepress/
 │   └── config.mts
 ├── getting-started/
+├── integrations/
 ├── protocols/
 ├── reference/
+├── guides/
 ├── public/
 │   └── logo.svg
 ├── index.md
@@ -51,26 +55,35 @@ docs/
 ├── status.md
 ├── faq.md
 └── changelog.md
+scripts/
+tests/
+CONTRIBUTING.md
 ```
 
 ## Integração contínua e dependências
 
 O workflow `.github/workflows/deploy-pages.yml`:
 1. Instala Node.js 22 e pnpm 12.12.1.
-2. Instala as dependências.
-3. Compila o site com VitePress.
-4. Publica o artefato no GitHub Pages somente quando a branch `principal` recebe alterações.
+2. Instala dependências com `pnpm install --frozen-lockfile`.
+3. Verifica a sintaxe dos exemplos JavaScript e executa testes automatizados de PKCE.
+4. Compila o site com VitePress.
+5. Publica o artefato no GitHub Pages somente quando a branch `principal` recebe alterações.
 
-Branches `feat/**` e pull requests para `principal` executam a etapa de build para validar o conteúdo, mas não publicam o site. Esse build também funciona como CI do projeto; não há necessidade de um segundo workflow `ci.yml` que repita a mesma instalação e compilação.
+Branches `feat/**` e pull requests para `principal` executam as etapas de validação e build, mas não publicam o site.
 
-O workflow `.github/workflows/sync-pnpm-lockfile.yml` é manual:
-- Execute-o pela aba **Actions → Sync pnpm lockfile → Run workflow**, selecionando uma branch de trabalho.
-- Ele usa pnpm 12.12.1 e Node.js 22, gera ou atualiza somente `pnpm-lock.yaml`, valida o modo frozen e faz commit apenas quando o arquivo muda.
+O workflow `.github/workflows/check-links.yml` verifica links locais das páginas Markdown em modo offline, evitando falhas causadas por indisponibilidade temporária de sites externos. O build VitePress também valida links internos.
+
+O workflow `.github/workflows/check-issuer-metadata.yml` verifica mensalmente (e sob demanda) os documentos públicos de descoberta OIDC e OAuth. A checagem valida issuer, campos essenciais e uso de HTTPS; ela não substitui uma revisão humana de mudanças de contrato.
+
+O workflow `.github/workflows/sync-pnpm-lockfile.yml`:
+- Sincroniza automaticamente o lockfile quando as declarações de dependências mudam em branches `feat/**`.
+- Também pode ser executado manualmente pela aba **Actions → Sync pnpm lockfile → Run workflow**.
+- Usa pnpm 12.12.1 e Node.js 22, gera ou atualiza somente `pnpm-lock.yaml`, valida o modo frozen e faz commit apenas quando o arquivo muda.
 - A branch `principal` é deliberadamente excluída para evitar commits diretos nela.
-- O `pnpm-lock.yaml` já é versionado. O workflow de Pages utiliza `pnpm install --frozen-lockfile`; não use `--no-frozen-lockfile` na CI.
-- Se `package.json` ou as dependências mudarem, execute o workflow manual em uma branch de trabalho para sincronizar o lockfile. Revise o diff e confirme que o build frozen passa antes de integrar.
 
-O Dependabot está configurado em `.github/dependabot.yml` para verificar semanalmente as dependências pnpm e as GitHub Actions, abrindo PRs de atualização com os rótulos correspondentes.
+O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação frozen; não use `--no-frozen-lockfile` na CI. O Vite é fixado em versão corrigida por meio de override para evitar a versão transitiva vulnerável incluída no VitePress 1.x.
+
+O Dependabot está configurado em `.github/dependabot.yml` para verificar semanalmente as dependências pnpm e as GitHub Actions.
 
 ## Publicação pelo GitHub Pages
 
@@ -103,4 +116,4 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 
 ## Estado do projeto
 
-A documentação, a configuração VitePress, os workflows de validação/publicação e sincronização do lockfile e as atualizações automatizadas de dependências estão versionados nesta branch. O build é validado em branches de trabalho e pull requests; a publicação efetiva ocorre somente a partir da branch `principal`, após configurar GitHub Pages e o domínio personalizado. A existência de um build aprovado não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.
+A documentação, a configuração VitePress, os workflows de validação/publicação, revisão periódica de metadados, verificação de links, testes e sincronização do lockfile estão versionados na branch de trabalho. O build é validado em branches de trabalho e pull requests; a publicação efetiva ocorre somente a partir da branch `principal`, após configurar GitHub Pages e o domínio personalizado. A existência de um build aprovado não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.

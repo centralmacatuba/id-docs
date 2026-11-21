@@ -6,12 +6,14 @@ export default defineConfig({
   description: "Documentação pública para integrar aplicações ao serviço de identidade Central Macatuba - ID.",
   cleanUrls: true,
   lastUpdated: true,
+  head: [["link", { rel: "canonical", href: "https://docs.id.centralmacatuba.qzz.io/" }]],
   themeConfig: {
     logo: "/logo.svg",
     siteTitle: "Central Macatuba - ID",
     nav: [
       { text: "Início", link: "/" },
       { text: "Primeiros passos", link: "/getting-started/" },
+      { text: "Integrações", link: "/integrations/" },
       { text: "Protocolos", link: "/protocols/openid-connect" },
       { text: "Referência", link: "/reference/discovery" },
       { text: "Segurança", link: "/security" }
@@ -25,6 +27,15 @@ export default defineConfig({
         ]
       },
       {
+        text: "Integrações",
+        items: [
+          { text: "Visão geral", link: "/integrations/" },
+          { text: "Node.js / Backend", link: "/integrations/nodejs" },
+          { text: "SPA", link: "/integrations/spa" },
+          { text: "Aplicativos nativos", link: "/integrations/native" }
+        ]
+      },
+      {
         text: "Protocolos",
         items: [
           { text: "OpenID Connect", link: "/protocols/openid-connect" },
@@ -35,7 +46,15 @@ export default defineConfig({
         text: "Referência técnica",
         items: [
           { text: "Descoberta e endpoints", link: "/reference/discovery" },
-          { text: "Scopes", link: "/reference/scopes" }
+          { text: "Scopes", link: "/reference/scopes" },
+          { text: "Erros e diagnóstico", link: "/reference/errors" }
+        ]
+      },
+      {
+        text: "Guias",
+        items: [
+          { text: "Preparação para produção", link: "/guides/production" },
+          { text: "Versionamento", link: "/guides/versioning" }
         ]
       },
       {
@@ -48,16 +67,12 @@ export default defineConfig({
         ]
       }
     ],
-    socialLinks: [
-      { icon: "github", link: "https://github.com/centralmacatuba/id-docs" }
-    ],
+    socialLinks: [{ icon: "github", link: "https://github.com/centralmacatuba/id-docs" }],
     footer: {
       message: "Projeto independente e gratuito, sem vínculo com a Prefeitura Municipal de Macatuba.",
       copyright: "Central Macatuba · Central Macatuba - ID"
     },
-    search: {
-      provider: "local"
-    },
+    search: { provider: "local" },
     editLink: {
       pattern: "https://github.com/centralmacatuba/id-docs/edit/principal/docs/:path",
       text: "Editar esta página no GitHub"
