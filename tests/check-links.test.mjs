@@ -128,7 +128,7 @@ test("rejeita links simbólicos que apontam para fora de docs/", async () => {
 
     assert.equal(result.status, 1);
     assert.match(result.stderr, /destino local aponta para fora de docs\//);
-    assert.match(result.stderr, /secret\\.md/);
+    assert.match(result.stderr, /secret\.md/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
