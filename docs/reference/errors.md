@@ -40,7 +40,7 @@ A lista é uma referência de interoperabilidade, não uma garantia de que todos
 - Envie o código apenas uma vez.
 - Utilize o mesmo Redirect URI da solicitação de autorização.
 - Envie o `code_verifier` associado à transação original.
-- Para `private_key_jwt`, confirme relógio do servidor, `kid`, algoritmo e chave pública cadastrada.
+- Para `private_key_jwt`, confirme o relógio do servidor, o `kid`, o algoritmo e a chave pública cadastrada.
 
 ### Validação do ID Token
 
