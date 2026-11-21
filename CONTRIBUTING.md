@@ -16,6 +16,7 @@ A Central Macatuba é um projeto independente e gratuito, sem vínculo com a Pre
 ```sh
 pnpm install --frozen-lockfile
 pnpm check:examples
+pnpm check:links
 pnpm test
 pnpm build
 ```
@@ -25,8 +26,8 @@ O workflow de CI também verifica links locais das páginas Markdown. A checagem
 ## Conteúdo técnico
 
 - Confirme cada afirmação com o comportamento público do serviço e os metadados de descoberta.
-- Não trate capacidades anunciadas como garantia de que o portal permite registrá-las.
-- Não prometa disponibilidade de produção ou homologação sem confirmação.
+- Capacidades anunciadas não garantem que o portal permita registrá-las.
+- Só informe disponibilidade de produção ou homologação após confirmação.
 - Prefira exemplos completos, mínimos e seguros.
 - Explique claramente quando uma função é pseudocódigo ou uma abstração que o integrador precisa implementar.
 - Atualize o histórico e os guias relacionados quando uma mudança alterar o comportamento documentado.
