@@ -1,12 +1,23 @@
 import { defineConfig } from "vitepress";
 
+const canonicalOrigin = "https://docs.id.centralmacatuba.qzz.io";
+
 export default defineConfig({
   lang: "pt-BR",
   title: "Central Macatuba - ID",
   description: "Documentação pública para integrar aplicações ao serviço de identidade Central Macatuba - ID.",
   cleanUrls: true,
   lastUpdated: true,
-  head: [["link", { rel: "canonical", href: "https://docs.id.centralmacatuba.qzz.io/" }]],
+  transformHead({ page }) {
+    const route = page.relativePath
+      .replace(/(^|\/)index\.md$/, "$1")
+      .replace(/\.md$/, "");
+    const canonicalPath = route ? `/${route}` : "/";
+
+    return [
+      ["link", { rel: "canonical", href: new URL(canonicalPath, canonicalOrigin).href }],
+    ];
+  },
   themeConfig: {
     logo: "/logo.svg",
     siteTitle: "Central Macatuba - ID",
