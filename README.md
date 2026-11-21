@@ -68,7 +68,8 @@ O workflow `.github/workflows/sync-pnpm-lockfile.yml` é manual:
 - Execute-o pela aba **Actions → Sync pnpm lockfile → Run workflow**, selecionando uma branch de trabalho.
 - Ele usa pnpm 12.12.1 e Node.js 22, gera ou atualiza somente `pnpm-lock.yaml`, valida o modo frozen e faz commit apenas quando o arquivo muda.
 - A branch `principal` é deliberadamente excluída para evitar commits diretos nela.
-- Depois que o lockfile for gerado e versionado, altere a instalação do workflow de Pages para `pnpm install --frozen-lockfile`.
+- O `pnpm-lock.yaml` já é versionado. O workflow de Pages utiliza `pnpm install --frozen-lockfile`; não use `--no-frozen-lockfile` na CI.
+- Se `package.json` ou as dependências mudarem, execute o workflow manual em uma branch de trabalho para sincronizar o lockfile. Revise o diff e confirme que o build frozen passa antes de integrar.
 
 O Dependabot está configurado em `.github/dependabot.yml` para verificar semanalmente as dependências pnpm e as GitHub Actions, abrindo PRs de atualização com os rótulos correspondentes.
 
@@ -108,6 +109,6 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 - Descoberta OIDC: https://id.centralmacatuba.qzz.io/.well-known/openid-configuration
 - Metadados OAuth: https://id.centralmacatuba.qzz.io/.well-known/oauth-authorization-server
 
-## Estado do scaffold
+## Estado do projeto
 
-Esta branch inicializa a documentação, a configuração VitePress, o workflow de validação/publicação, a sincronização manual do lockfile e as atualizações automatizadas de dependências. Antes de integrar à branch principal, gere e versione `pnpm-lock.yaml`, altere o workflow de Pages para instalação frozen e valide a publicação de teste no GitHub Pages.
+A documentação, a configuração VitePress, os workflows de validação/publicação e sincronização do lockfile e as atualizações automatizadas de dependências estão versionados nesta branch. O build é validado em branches de trabalho e pull requests; a publicação efetiva ocorre somente a partir da branch `principal`, após configurar GitHub Pages e o domínio personalizado. A existência de um build aprovado não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.
