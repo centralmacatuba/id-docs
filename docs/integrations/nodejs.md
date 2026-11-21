@@ -23,6 +23,10 @@ const config = await oidc.discovery(
   undefined,
   oidc.None(),
 );
+
+// Habilita a verificação adicional da assinatura dos JWTs processados.
+// Requer que o issuer publique um jwks_uri compatível.
+oidc.enableNonRepudiationChecks(config);
 ```
 
 Mantenha `clientId` e demais configurações no ambiente do servidor. O exemplo não inclui credenciais confidenciais.
@@ -55,11 +59,29 @@ const authorizationUrl = oidc.buildAuthorizationUrl(config, {
 ## Processar o callback
 
 ```js
+// Use a origem e o caminho do Redirect URI registrado; nunca confie no Host.
+const callbackUrl = new URL(redirectUri);
+if (callbackUrl.search) {
+  throw new Error("Registre o Redirect URI sem query string.");
+}
+
+// Em http.Server, request.url normalmente contém apenas caminho e query.
+// A origem fixa impede que o cabeçalho Host controle o endereço usado.
+const incomingCallbackUrl = new URL(request.url, callbackUrl.origin);
+if (
+  incomingCallbackUrl.origin !== callbackUrl.origin ||
+  incomingCallbackUrl.pathname !== callbackUrl.pathname
+) {
+  throw new Error("Callback recebido em um endereço inesperado.");
+}
+callbackUrl.search = incomingCallbackUrl.search;
+
+// Só consuma a transação depois de validar o endereço do callback.
 const transaction = await consumeTransactionFromSession();
 
 const tokens = await oidc.authorizationCodeGrant(
   config,
-  new URL(request.url),
+  callbackUrl,
   {
     pkceCodeVerifier: transaction.codeVerifier,
     expectedState: transaction.state,
@@ -72,7 +94,9 @@ const claims = tokens.claims();
 // Crie uma sessão local após a validação bem-sucedida.
 ```
 
-As funções de sessão e o objeto `request` são abstrações: conecte-as ao framework utilizado. Não aceite parâmetros de sessão enviados pelo navegador sem integridade e vinculação à sessão original.
+As funções de sessão e o objeto `request` são abstrações: conecte-os ao framework utilizado. Não aceite parâmetros de sessão enviados pelo navegador sem integridade e vinculação à sessão original. Registre o Redirect URI sem query string: `openid-client` deriva o parâmetro `redirect_uri` da URL de callback removendo sua query, que contém os parâmetros de resposta OAuth.
+
+A verificação de assinatura habilitada com `enableNonRepudiationChecks` é uma camada adicional de não repúdio; a biblioteca também autentica a comunicação direta com o endpoint de token por TLS. Mantenha o `jwks_uri` publicado pelo issuer acessível e atualizado.
 
 ## Requisitos para produção
 
