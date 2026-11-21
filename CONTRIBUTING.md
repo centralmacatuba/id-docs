@@ -40,6 +40,17 @@ O workflow de CI também verifica links locais das páginas Markdown. A checagem
 - Destaque mudanças incompatíveis e passos de migração.
 - Não inclua alterações de lockfile sem sincronização reproduzível por pnpm.
 
+## Revisão automatizada
+
+Os pull requests passam por verificações automatizadas:
+
+- VitePress build, testes, exemplos JavaScript e links locais.
+- zizmor para auditoria de segurança dos workflows e da configuração do GitHub Actions.
+- LanguageTool com reviewdog para revisão de português brasileiro.
+- Dependabot para atualizações de dependências e GitHub Actions.
+
+As sugestões de estilo devem ser avaliadas no contexto técnico. Preserve nomes oficiais de protocolos, parâmetros, scopes, claims e APIs, mesmo quando uma ferramenta de linguagem sugerir traduzi-los.
+
 ## Revisão
 
 Toda contribuição pode ser revisada quanto à precisão técnica, segurança, clareza, acessibilidade e consistência com o restante da documentação.
