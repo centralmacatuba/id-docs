@@ -65,9 +65,9 @@ for (const [name, overrides, diagnostic] of [
   ["com outro issuer", { issuer: "https://other.example.test" }, /Issuer inesperado/],
   ["com endpoint opcional sem HTTPS", { userinfo_endpoint: "http://issuer.example.test/userinfo" }, /userinfo_endpoint não utiliza HTTPS/],
   ["sem suporte a S256", { code_challenge_methods_supported: ["plain"] }, /não anunciam PKCE S256/],
-  ["sem métodos PKCE", { code_challenge_methods_supported: undefined }, /Campo obrigatório ausente ou inválido: code_challenge_methods_supported/],
+  ["sem métodos PKCE", { code_challenge_methods_supported: undefined }, /não anunciam PKCE S256/],
   ["sem fluxo authorization code", { response_types_supported: ["token"] }, /não anunciam o response type code/],
-  ["sem response_types_supported", { response_types_supported: undefined }, /Campo obrigatório ausente ou inválido: response_types_supported/],
+  ["sem response_types_supported", { response_types_supported: undefined }, /não anunciam o response type code/],
 ]) {
   test(`rejeita descoberta OIDC ${name} e ainda verifica OAuth`, () => {
     const result = runChecker({ oidc: json({ ...discovery, ...overrides }) });
