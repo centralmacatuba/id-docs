@@ -14,7 +14,7 @@ Para aplicações que atuam em nome de uma pessoa, utilize **Authorization Code 
 6. Troque o código no endpoint de token com o mesmo `redirect_uri` e `code_verifier`.
 7. Valide o ID Token por meio de uma biblioteca OIDC confiável.
 
-O Redirect URI enviado deve corresponder exatamente a um endereço registrado. Não reutilize `state`, `nonce` ou `code_verifier) entre tentativas.
+O Redirect URI enviado deve corresponder exatamente a um endereço registrado. Não reutilize `state`, `nonce` ou `code_verifier` entre tentativas.
 
 ## Exemplo JavaScript com openid-client
 
