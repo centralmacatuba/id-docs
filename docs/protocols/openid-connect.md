@@ -28,7 +28,7 @@ Não implemente validação criptográfica de JWT manualmente.
 
 ## Validação do ID Token
 
-A aplicação deve validar, no mínimo, conforme OIDC Core:
+A aplicação deve validar, no mínimo, conforme OIDC Core e utilizando uma biblioteca mantida:
 
 - Assinatura usando uma chave pública publicada pelo JWKS indicado nos metadados.
 - `iss` igual ao issuer descoberto.
