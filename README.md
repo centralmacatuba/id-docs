@@ -30,6 +30,7 @@ Gere a versão estática:
 
 ```sh
 pnpm check:examples
+pnpm check:links
 pnpm test
 pnpm build
 pnpm preview
@@ -71,7 +72,7 @@ O workflow `.github/workflows/deploy-pages.yml`:
 
 Branches `feat/**` e pull requests para `principal` executam as etapas de validação e build, mas não publicam o site.
 
-O workflow `.github/workflows/check-links.yml` verifica links locais das páginas Markdown em modo offline, evitando falhas causadas por indisponibilidade temporária de sites externos. O build VitePress também valida links internos.
+O workflow `.github/workflows/check-links.yml` verifica links locais das páginas Markdown, incluindo os caminhos sem extensão usados pelo VitePress. A checagem é local e não depende da disponibilidade de sites externos.
 
 O workflow `.github/workflows/check-issuer-metadata.yml` verifica mensalmente (e sob demanda) os documentos públicos de descoberta OIDC e OAuth. A checagem valida issuer, campos essenciais e uso de HTTPS; ela não substitui uma revisão humana de mudanças de contrato.
 
@@ -81,7 +82,7 @@ O workflow `.github/workflows/sync-pnpm-lockfile.yml`:
 - Usa pnpm 12.12.1 e Node.js 22, gera ou atualiza somente `pnpm-lock.yaml`, valida o modo frozen e faz commit apenas quando o arquivo muda.
 - A branch `principal` é deliberadamente excluída para evitar commits diretos nela.
 
-O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação frozen; não use `--no-frozen-lockfile` na CI. O Vite é fixado em versão corrigida por meio de override para evitar a versão transitiva vulnerável incluída no VitePress 1.x.
+O `pnpm-lock.yaml` é versionado. O workflow de Pages utiliza instalação frozen; não use `--no-frozen-lockfile` na CI. O Vite é fixado em 6.4.6 por meio de override em `pnpm-workspace.yaml`, versão corrigida para o alerta GHSA-p4f5-76q4-ffq7 identificado na dependência transitiva do VitePress 1.x.
 
 O Dependabot está configurado em `.github/dependabot.yml` para verificar semanalmente as dependências pnpm e as GitHub Actions.
 

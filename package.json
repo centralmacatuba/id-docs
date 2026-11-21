@@ -4,15 +4,19 @@
   "version": "0.1.0",
   "type": "module",
   "packageManager": "pnpm@12.12.1",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs",
     "check:examples": "node scripts/check-examples.mjs",
+    "check:links": "node scripts/check-links.mjs",
     "test": "node --test tests/*.test.mjs",
     "check:issuer": "node scripts/check-issuer-metadata.mjs"
   },
-  "devDependencies": { "vitepress": "1.6.4" },
-  "pnpm": { "overrides": { "vite": "6.4.6" } }
+  "devDependencies": {
+    "vitepress": "1.6.4"
+  }
 }
