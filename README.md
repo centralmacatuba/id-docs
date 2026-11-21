@@ -82,7 +82,7 @@ O workflow `.github/workflows/sync-pnpm-lockfile.yml`:
 - Usa pnpm 12.12.1 e Node.js 22, gera ou atualiza somente `pnpm-lock.yaml`, valida o modo frozen e faz commit apenas quando o arquivo muda.
 - A branch `principal` é deliberadamente excluída para evitar commits diretos nela.
 
-O workflow `.github/workflows/zizmor.yml` audita os workflows e configurações do GitHub Actions com zizmor em pull requests e alterações na branch `principal`.
+O zizmor analisa os arquivos de workflow e as configurações do GitHub Actions nos pull requests e nos pushes para `principal`.
 
 O workflow `.github/workflows/languagetool.yml` revisa a ortografia e a gramática do conteúdo em português nos pull requests, usando LanguageTool e reviewdog.
 
@@ -121,4 +121,4 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 
 ## Estado do projeto
 
-A documentação, a configuração VitePress, os workflows de validação/publicação, a revisão periódica de metadados, a verificação de links, os testes e a sincronização do lockfile estão versionados na branch de trabalho. A compilação é validada em pull requests direcionados a `principal` e em execuções manuais; pushes em `principal` também geram o artefato de publicação. A publicação efetiva ocorre somente a partir dessa branch, após configurar GitHub Pages e o domínio personalizado. Um build aprovado não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.
+O repositório contém a documentação, a configuração VitePress, os workflows, os testes e os scripts de validação na branch de trabalho. A compilação é validada em pull requests direcionados a `principal` e em execuções manuais; pushes em `principal` também geram o artefato de publicação. A publicação efetiva ocorre somente a partir dessa branch, após configurar GitHub Pages e o domínio personalizado. Um build aprovado não significa que o site já esteja publicado ou que o serviço de identidade esteja homologado para produção.
