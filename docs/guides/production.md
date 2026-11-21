@@ -62,4 +62,4 @@ Este checklist ajuda a revisar uma integração antes de disponibilizá-la a usu
 
 ## Liberação
 
-A aprovação do build, por si só, não autoriza a liberação. Confirme o ambiente, a aprovação do cliente, a disponibilidade do issuer, os requisitos jurídicos e a validação operacional antes de habilitar usuários reais.
+A aprovação da compilação, por si só, não autoriza a liberação. Confirme o ambiente, a aprovação do cliente, a disponibilidade do issuer, os requisitos jurídicos e a validação operacional antes de habilitar usuários reais.
