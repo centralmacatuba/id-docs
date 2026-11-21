@@ -3,12 +3,12 @@ const resources = [
   {
     name: "OpenID Connect Discovery",
     path: "/.well-known/openid-configuration",
-    required: ["issuer", "authorization_endpoint", "token_endpoint", "jwks_uri"],
+    required: ["issuer", "authorization_endpoint", "token_endpoint", "jwks_uri", "response_types_supported", "code_challenge_methods_supported"],
   },
   {
     name: "OAuth Authorization Server Metadata",
     path: "/.well-known/oauth-authorization-server",
-    required: ["issuer", "authorization_endpoint", "token_endpoint"],
+    required: ["issuer", "authorization_endpoint", "token_endpoint", "response_types_supported", "code_challenge_methods_supported"],
   },
 ];
 
@@ -41,7 +41,11 @@ for (const resource of resources) {
       }
     }
 
-    if (metadata.code_challenge_methods_supported && !metadata.code_challenge_methods_supported.includes("S256")) {
+    if (!Array.isArray(metadata.response_types_supported) || !metadata.response_types_supported.includes("code")) {
+      throw new Error("Os metadados não anunciam o response type code.");
+    }
+
+    if (!Array.isArray(metadata.code_challenge_methods_supported) || !metadata.code_challenge_methods_supported.includes("S256")) {
       throw new Error("Os metadados não anunciam PKCE S256.");
     }
 
