@@ -1,9 +1,15 @@
-import { readFile, readdir, stat } from "node:fs/promises";
-import { dirname, extname, join, relative, resolve } from "node:path";
+import { readFile, readdir, realpath, stat } from "node:fs/promises";
+import { dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 const docsRoot = resolve("docs");
+const docsRootReal = await realpath(docsRoot);
 const failures = [];
 let checked = 0;
+
+function isWithin(root, candidate) {
+  const path = relative(root, candidate);
+  return path === "" || (path !== ".." && !path.startsWith(".." + sep) && !isAbsolute(path));
+}
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -16,8 +22,8 @@ async function walk(directory) {
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
 
     const fence = String.fromCharCode(96).repeat(3);
-    const source = (await readFile(path, "utf8")).replace(new RegExp(fence + "[\\s\\S]*?" + fence, "g"), "");
-    const links = [...source.matchAll(/!?\[[^\]]*\]\((<[^>]+>|[^)\s]+)(?:\s+["'][^"']*["'])?\)/g)];
+    const source = (await readFile(path, "utf8")).replace(new RegExp(fence + "[\\\\s\\\\S]*?" + fence, "g"), "");
+    const links = [...source.matchAll(/!?\\[[^\\]]*\\]\\((<[^>]+>|[^)\\s]+)(?:\\s+["'][^"']*["'])?\\)/g)];
 
     for (const match of links) {
       let href = match[1].replace(/^<|>$/g, "");
@@ -40,11 +46,17 @@ async function walk(directory) {
       const target = href.startsWith("/")
         ? resolve(docsRoot, "." + href)
         : resolve(dirname(path), href);
+
+      if (!isWithin(docsRoot, target)) {
+        failures.push(relative(process.cwd(), path) + ": destino local fora de docs/: " + match[1]);
+        continue;
+      }
+
       const candidates = [];
       if (extname(target)) {
         candidates.push(target);
-        if (/\.html$/i.test(target)) {
-          candidates.push(target.replace(/\.html$/i, ".md"));
+        if (/\\.html$/i.test(target)) {
+          candidates.push(target.replace(/\\.html$/i, ".md"));
         }
         if (href.startsWith("/")) candidates.push(resolve(docsRoot, "public", "." + href));
       } else {
@@ -53,9 +65,16 @@ async function walk(directory) {
       }
 
       let exists = false;
+      let escapedSymlink = false;
       for (const candidate of candidates) {
+        if (!isWithin(docsRoot, candidate)) continue;
         try {
           if ((await stat(candidate)).isFile()) {
+            const actualPath = await realpath(candidate);
+            if (!isWithin(docsRootReal, actualPath)) {
+              escapedSymlink = true;
+              continue;
+            }
             exists = true;
             break;
           }
@@ -65,7 +84,10 @@ async function walk(directory) {
       }
 
       if (!exists) {
-        failures.push(relative(process.cwd(), path) + ": link local não encontrado: " + match[1]);
+        const reason = escapedSymlink
+          ? "destino local aponta para fora de docs/: "
+          : "link local não encontrado: ";
+        failures.push(relative(process.cwd(), path) + ": " + reason + match[1]);
       }
     }
   }
@@ -74,9 +96,9 @@ async function walk(directory) {
 await walk(docsRoot);
 
 if (failures.length) {
-  for (const failure of failures) process.stderr.write(failure + "\n");
-  process.stderr.write("\n" + failures.length + " problema(s) em links locais.\n");
+  for (const failure of failures) process.stderr.write(failure + "\\n");
+  process.stderr.write("\\n" + failures.length + " problema(s) em links locais.\\n");
   process.exitCode = 1;
 } else {
-  process.stdout.write("Links locais verificados: " + checked + ". Nenhum destino ausente.\n");
+  process.stdout.write("Links locais verificados: " + checked + ". Nenhum destino ausente.\\n");
 }
