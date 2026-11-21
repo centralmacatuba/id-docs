@@ -46,3 +46,49 @@ test("falha quando um destino local não existe", async () => {
   assert.equal(result.status, 1);
   assert.match(result.stderr, /link local não encontrado: \/inexistente/);
 });
+
+test("resolve URLs limpas, destinos relativos e imagens públicas", async () => {
+  const result = await runChecker("[guia](/guide/)\n", {
+    "guide/index.md": [
+      '[nome com espaço](<../reference/with space.md> "Título")',
+      "[URL codificada](../reference/with%20space?view=full#details)",
+      "[página HTML](/manual)",
+      "![logo](/logo.svg)",
+      "[arquivo público sem extensão](/download)",
+    ].join("\n"),
+    "reference/with space.md": "# Referência\n",
+    "manual/index.html": "<!doctype html>",
+    "public/logo.svg": "<svg/>",
+    "public/download": "arquivo",
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Links locais verificados: 6\./);
+});
+
+test("ignora links externos, fragmentos e consultas da página atual", async () => {
+  const result = await runChecker([
+    "#section",
+    "?view=full#section",
+    "//example.test/path",
+    "HTTPS://example.test/path",
+    "mailto:contact@example.test",
+    "tel:+551234567890",
+  ].map((href) => `[link](${href})`).join("\n"));
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Links locais verificados: 0\./);
+});
+
+test("distingue escapes inválidos de destinos ausentes e continua a verificação", async () => {
+  const result = await runChecker("[guia](/guide)\n", {
+    "guide.md": "[inválido](/bad%ZZ)\n[ausente](/missing?view=full#section)\n[arquivo](/folder.svg)\n",
+    "folder.svg/child.txt": "diretório, não arquivo",
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /guide\.md: URL local contém escape percentual inválido: \/bad%ZZ/);
+  assert.match(result.stderr, /guide\.md: link local não encontrado: \/missing\?view=full#section/);
+  assert.match(result.stderr, /guide\.md: link local não encontrado: \/folder\.svg/);
+  assert.match(result.stderr, /3 problema\(s\)/);
+});
