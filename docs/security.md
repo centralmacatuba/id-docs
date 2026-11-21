@@ -11,6 +11,8 @@ A segurança das integrações depende tanto do CM ID quanto de cada aplicação
 - Validação de ID Tokens com biblioteca OIDC mantida.
 - Armazenamento seguro de tokens e chaves privadas.
 - Scopes mínimos e consentimento explícito.
+- Aceite dos Termos de Uso e da Política de Privacidade vigentes na conta CM ID antes de concluir a autenticação.
+- Proteção de sessão no backend, cookies seguros e prevenção de CSRF conforme o framework utilizado.
 - Dependências atualizadas e monitoradas.
 
 ## Proteção de credenciais
@@ -25,6 +27,8 @@ Nunca publique:
 - Dados pessoais de usuários.
 
 Não coloque credenciais em query strings, screenshots, issues, logs ou mensagens de suporte.
+
+Prefira manter tokens no backend e associar o navegador a uma sessão protegida por cookie httpOnly, Secure e SameSite adequado ao fluxo. Evite armazenar access tokens ou refresh tokens em localStorage.
 
 ## Redirect URIs
 
