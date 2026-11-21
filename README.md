@@ -110,4 +110,4 @@ Se o DNS estiver no Cloudflare, mantenha o registro como **DNS only** durante a 
 
 ## Estado do scaffold
 
-Esta branch inicializa a documentação, a configuração VitePress, o workflow de validação/publicação, a sincronização manual do lockfile e as atualizações automatizadas de dependências. Antes de integrar à branch principal, gere e versione `pnpm-lock.yaml), altere o workflow de Pages para instalação frozen e valide a publicação de teste no GitHub Pages.
+Esta branch inicializa a documentação, a configuração VitePress, o workflow de validação/publicação, a sincronização manual do lockfile e as atualizações automatizadas de dependências. Antes de integrar à branch principal, gere e versione `pnpm-lock.yaml`, altere o workflow de Pages para instalação frozen e valide a publicação de teste no GitHub Pages.
