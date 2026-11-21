@@ -1,5 +1,6 @@
 import { readFile, readdir, realpath, stat } from "node:fs/promises";
 import { dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { extractMarkdownLinks } from "./markdown-utils.mjs";
 
 const docsRoot = resolve("docs");
 const docsRootReal = await realpath(docsRoot);
@@ -21,12 +22,11 @@ async function walk(directory) {
     }
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
 
-    const fence = String.fromCharCode(96).repeat(3);
-    const source = (await readFile(path, "utf8")).replace(new RegExp(fence + "[\\s\\S]*?" + fence, "g"), "");
-    const links = [...source.matchAll(/!?\[[^\]]*\]\((<[^>]+>|[^)\s]+)(?:\s+["'][^"']*["'])?\)/g)];
+    const source = await readFile(path, "utf8");
+    const links = extractMarkdownLinks(source);
 
-    for (const match of links) {
-      let href = match[1].replace(/^<|>$/g, "");
+    for (const link of links) {
+      let href = link.href;
       if (
         !href ||
         href.startsWith("#") ||

@@ -40,6 +40,40 @@ test("aceita links locais existentes e ignora links dentro de cercas", async () 
   assert.match(result.stdout, /Links locais verificados: 1/);
 });
 
+test("ignora cercas CommonMark com tis e comprimentos diferentes", async () => {
+  const markdown = [
+    "[válido](/guide)",
+    "",
+    "~~~~md",
+    "[falso](/missing)",
+    "~~~",
+    "[continua na cerca](/also-missing)",
+    "~~~~",
+  ].join("\\n");
+  const result = await runChecker(markdown, { "guide.md": "# Guia\\n" });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Links locais verificados: 1/);
+});
+
+test("resolve links de referência completos, colapsados e abreviados", async () => {
+  const markdown = [
+    "[guia][guia-ref]",
+    "[guia colapsado][]",
+    "[guia abreviado]",
+    "[ausente][ausente-ref]",
+    "",
+    "[guia-ref]: /guide",
+    "[guia colapsado]: /guide/index.md",
+    "[guia abreviado]: /guide",
+    "[ausente-ref]: /missing",
+  ].join("\\n");
+  const result = await runChecker(markdown, { "guide/index.md": "# Guia\\n" });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /link local não encontrado: \\/missing/);
+  assert.match(result.stderr, /1 problema\\(s\\)/);
+});
 test("falha quando um destino local não existe", async () => {
   const result = await runChecker("[ausente](/inexistente)\n");
 

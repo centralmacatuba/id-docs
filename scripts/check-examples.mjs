@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { extractFencedCodeBlocks } from "./markdown-utils.mjs";
 
 const docsDirectory = fileURLToPath(new URL("../docs/", import.meta.url));
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
@@ -21,11 +22,12 @@ async function walk(directory) {
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
 
     const source = await readFile(path, "utf8");
-    const fence = String.fromCharCode(96).repeat(3);
-    const pattern = new RegExp(fence + "(?:js|javascript|mjs)\\s*\\n([\\s\\S]*?)\\n" + fence, "g");
-    const blocks = [...source.matchAll(pattern)];
+    const blocks = extractFencedCodeBlocks(source).filter((block) => {
+      const language = /^([^\\s{]+)/.exec(block.info)?.[1]?.toLowerCase();
+      return ["js", "javascript", "mjs"].includes(language);
+    });
     for (let index = 0; index < blocks.length; index += 1) {
-      const snippet = blocks[index][1];
+      const snippet = blocks[index].content;
       if (!snippet.trim()) continue;
 
       checked += 1;

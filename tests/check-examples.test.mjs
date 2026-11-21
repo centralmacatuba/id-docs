@@ -6,6 +6,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 
 const checker = new URL("../scripts/check-examples.mjs", import.meta.url);
+const markdownUtils = new URL("../scripts/markdown-utils.mjs", import.meta.url);
 const block = (language, source) => `\`\`\`${language}\n${source}\n\`\`\``;
 
 async function runChecker(t, files) {
@@ -17,6 +18,7 @@ async function runChecker(t, files) {
   await mkdir(scratch);
   await mkdir(join(root, "docs"));
   await copyFile(checker, script);
+  await copyFile(markdownUtils, join(root, "scripts", "markdown-utils.mjs"));
   for (const [name, content] of Object.entries(files)) {
     const file = join(root, "docs", name);
     await mkdir(dirname(file), { recursive: true });
@@ -56,6 +58,23 @@ test("ignora cercas de outros idiomas e blocos JS vazios", async (t) => {
   assert.match(result.stdout, /válida em 0 bloco\(s\)/);
 });
 
+test("reconhece cercas CommonMark com tis e comprimentos maiores", async (t) => {
+  const ticks = String.fromCharCode(96);
+  const result = await runChecker(t, {
+    "fences.md": [
+      "~~~js",
+      "const tildeExample = true;",
+      "~~~~",
+      "",
+      ticks.repeat(4) + "javascript title",
+      "const backtickExample = true;",
+      ticks.repeat(4),
+    ].join("\\n"),
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /válida em 2 bloco\\(s\\)/);
+});
 test("lista erros de sintaxe em vários arquivos com o número do bloco", async (t) => {
   const result = await runChecker(t, {
     "a.md": [block("js", "const valid = true;"), block("mjs", "export const = ;")].join("\n\n"),
