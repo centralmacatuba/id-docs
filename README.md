@@ -45,7 +45,6 @@ docs/
 ├── protocols/
 ├── reference/
 ├── public/
-│   ├── CNAME
 │   └── logo.svg
 ├── index.md
 ├── security.md
