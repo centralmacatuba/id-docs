@@ -13,6 +13,10 @@ updates:
     commit-message:
       prefix: chore
       include: scope
+    assignees:
+      - centralmacatuba
+      - desenvolvedor-ee
+      - desenvolvedoree-bot
     groups:
       vitepress:
         patterns:
@@ -29,6 +33,10 @@ updates:
     labels:
       - dependencies
       - github-actions
+    assignees:
+      - centralmacatuba
+      - desenvolvedor-ee
+      - desenvolvedoree-bot
     commit-message:
       prefix: ci
       include: scope
