@@ -1,14 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" role="img" aria-labelledby="title desc">
   <title id="title">Central Macatuba - ID</title>
-  <desc id="desc">Identidade visual do serviço de identidade digital da Central Macatuba, representada por um cartão de identificação com selo de verificação.</desc>
-  <g transform="translate(8 8)">
-    <rect x="7" y="7" width="88" height="88" rx="17" fill="none" stroke="#000000" stroke-width="7"/>
-    <path d="M10.5 28h81" stroke="#FF0000" stroke-width="9" stroke-linecap="round"/>
-    <circle cx="39" cy="51" r="12" fill="#000000"/>
-    <path d="M18 83c2-14 10-21 21-21s19 7 21 21" fill="#000000"/>
-    <path d="M66 54h17M66 66h12" stroke="#000000" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="79" cy="82" r="15" fill="#FF0000" stroke="#FFFFFF" stroke-width="4"/>
-    <path d="m72 82 5 5 9-11" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <desc id="desc">Marca do Central Macatuba ID com o símbolo CM ID em vermelho, preto e branco.</desc>
+  <g transform="translate(8 8) scale(0.171875)">
+    <rect width="512" height="512" rx="112" fill="#080808"/>
+    <rect x="32" y="32" width="448" height="448" rx="92" fill="#151515" stroke="#ff2020" stroke-width="12"/>
+    <path d="M115 145h282v42H115z" fill="#ff2020"/>
+    <text x="256" y="310" fill="#fff" font-family="Arial,Helvetica,sans-serif" font-size="170" font-weight="900" text-anchor="middle" letter-spacing="-12">CM</text>
+    <path d="M166 352h180v18H166z" fill="#ff2020"/>
+    <text x="256" y="418" fill="#d8d8d8" font-family="Arial,Helvetica,sans-serif" font-size="48" font-weight="700" text-anchor="middle" letter-spacing="12">ID</text>
   </g>
   <g font-family="Inter, Arial, Helvetica, sans-serif">
     <text x="126" y="53" fill="#000000" font-size="28" font-weight="750" letter-spacing="1.2">CENTRAL MACATUBA</text>
